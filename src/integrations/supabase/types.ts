@@ -14,13 +14,152 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_usage: {
+        Row: {
+          call_count: number
+          updated_at: string
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          call_count?: number
+          updated_at?: string
+          usage_date?: string
+          user_id: string
+        }
+        Update: {
+          call_count?: number
+          updated_at?: string
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      benefits: {
+        Row: {
+          created_at: string
+          extra_limit_note: string | null
+          granted_amount: number | null
+          id: string
+          monthly_cap: number | null
+          name: string
+          observed_at: string
+          observed_precision: string
+          observed_timezone: string
+          remaining_amount: number | null
+          reset_anchor: string | null
+          reset_rule: string
+          service_id: string
+          source_kind: string
+          source_note: string | null
+          unit: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          extra_limit_note?: string | null
+          granted_amount?: number | null
+          id?: string
+          monthly_cap?: number | null
+          name: string
+          observed_at: string
+          observed_precision?: string
+          observed_timezone?: string
+          remaining_amount?: number | null
+          reset_anchor?: string | null
+          reset_rule?: string
+          service_id: string
+          source_kind?: string
+          source_note?: string | null
+          unit: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          extra_limit_note?: string | null
+          granted_amount?: number | null
+          id?: string
+          monthly_cap?: number | null
+          name?: string
+          observed_at?: string
+          observed_precision?: string
+          observed_timezone?: string
+          remaining_amount?: number | null
+          reset_anchor?: string | null
+          reset_rule?: string
+          service_id?: string
+          source_kind?: string
+          source_note?: string | null
+          unit?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benefits_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          account_label: string | null
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          plan_name: string | null
+          provider: string | null
+          subscription_status: string
+          timezone: string
+          trial_ends_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_label?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          plan_name?: string | null
+          provider?: string | null
+          subscription_status?: string
+          timezone?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_label?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          plan_name?: string | null
+          provider?: string | null
+          subscription_status?: string
+          timezone?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      consume_ai_quota: {
+        Args: { _daily_limit: number; _user_id: string }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
