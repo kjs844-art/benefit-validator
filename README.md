@@ -1,14 +1,198 @@
-# Welcome to your Lovable project
+# Benefit Validator
+
+현재 “남은혜택” 앱을 해커톤 제출 전에 검증하고
+
+추후 외부 서버 이전이 가능하도록 정리해 주세요.
+
+새로운 기능이나 대규모 디자인 변경은 하지 마세요.
+
+정상 작동하는 기능을 유지하면서 문제를 확인하고 수정하세요.
+
+────────────────────
+
+1. 핵심 사용자 흐름 검증
+
+────────────────────
+
+- 비로그인 데모 체험
+
+- 회원가입과 로그인
+
+- 서비스 계정 등록
+
+- 혜택 직접 입력
+
+- AI 자료 분석
+
+- 결과 검토와 수정
+
+- 기존 계정 또는 새 계정에 저장
+
+- 대시보드와 일정 반영
+
+- 새로고침·재로그인 후 데이터 유지
+
+- 혜택 수정과 삭제
+
+등록되지 않은 외부 연결을
+
+연결됨 또는 동기화 완료로 표시하는 곳이 없는지 확인하세요.
+
+────────────────────
+
+2. 정확성·보안 검증
+
+────────────────────
+
+- null과 0이 구분되는지
+
+- 지급량과 현재 잔액이 혼동되지 않는지
+
+- 다른 단위나 중복 혜택이 합산되지 않는지
+
+- 과거 자료의 관찰 시점이 유지되는지
+
+- 리셋 시각 경과만으로 잔액이 자동 증가하지 않는지
+
+- 월간 상한 등 추가 제한이 무시되지 않는지
+
+- 무료 체험 종료가 계정 종료로 표시되지 않는지
+
+- 날짜만 있는 자료에 가짜 정확한 시각이 붙지 않는지
+
+- 실제 사용자 데이터와 데모 데이터가 분리되는지
+
+- 두 개의 테스트 사용자로 데이터 접근이 분리되는지
+
+- 서버 함수에서도 인증과 소유권을 검사하는지
+
+- 브라우저 코드나 저장소에 비밀키가 없는지
+
+- AI 호출 한도가 서버에서 적용되는지
+
+실행하지 않은 테스트는 통과로 표시하지 마세요.
+
+────────────────────
+
+3. 사용자 데이터 내보내기
+
+────────────────────
+
+로그인한 사용자가 자신의 서비스·혜택 데이터를
+
+JSON 파일로 내보낼 수 있게 해 주세요.
+
+- 다른 사용자의 데이터는 포함하지 마세요.
+
+- 비밀번호, 토큰, 서버 비밀키는 제외하세요.
+
+- 단위, 시간대, 출처 종류, 마지막 확인 시점을 보존하세요.
+
+- 내보낸 시점과 파일 형식 버전을 기록하세요.
+
+- 데모 데이터 내보내기에는 데모임을 명시하세요.
+
+이 기능이 전체 서비스 코드·인증 시스템을
+
+내보내는 기능과 다르다는 것을 문서화하세요.
+
+────────────────────
+
+4. GitHub와 외부 이전 준비
+
+────────────────────
+
+다음을 정리해 주세요.
+
+README:
+
+- 프로젝트 목적
+
+- 실제 구현 기능과 아직 없는 기능
+
+- 로컬 실행·빌드 방법
+
+- 필요한 환경변수
+
+- 테스트 실행 방법
+
+- 데모 체험 방법
+
+배포·이전 문서:
+
+- 프런트엔드만 외부 호스팅으로 옮기는 경로
+
+- 백엔드까지 옮기는 경우 필요한 작업
+
+- 데이터베이스 구조와 마이그레이션
+
+- 회원 인증과 리디렉션 설정
+
+- 서버 함수와 비밀키 설정
+
+- AI 제공자·호출 경로 변경 지점
+
+- 기존 Lovable Cloud에 남는 의존성
+
+- 이전 후 확인할 항목
+
+.env.example에는 실제 비밀값을 넣지 마세요.
+
+GitHub 연동에 내 계정 승인이 필요하면 정확한 작업을 알려 주세요.
+
+연결하지 않았는데 GitHub 백업이 완료됐다고 보고하지 마세요.
+
+일반 PostgreSQL만 준비하면
+
+인증·파일 저장·서버 함수까지 자동으로 대체된다고 설명하지 마세요.
+
+────────────────────
+
+5. 배포 전 점검
+
+────────────────────
+
+- 모바일과 데스크톱에서 핵심 화면 확인
+
+- 잘못된 주소와 새로고침 시 오류 처리 확인
+
+- 빈 화면, 로딩, 저장 실패 메시지 확인
+
+- 비로그인 심사자가 데모를 이용할 수 있는지 확인
+
+- 실제 지원하지 않는 자동 조회 광고 문구 제거
+
+- 테스트용 비밀정보와 개인 자료 제거
+
+- 운영 크레딧과 AI 호출 제한 등 유지에 필요한 조건 정리
+
+가능한 빌드·타입 검사·테스트를 실행하세요.
+
+문제 수정 후에는 관련 테스트를 다시 실행하세요.
+
+최종 보고는 다음으로 나누세요.
+
+1. 검증 완료
+
+2. 수정 완료
+
+3. 미검증 또는 남은 제한
+
+4. 내가 설정해야 하는 항목
+
+5. 배포 후 운영상 주의점
+
+공개 배포는 최종 확인을 받은 뒤 진행하세요.
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/66a6e26d-93e0-43aa-aae8-ca380659cc6f).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +204,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
