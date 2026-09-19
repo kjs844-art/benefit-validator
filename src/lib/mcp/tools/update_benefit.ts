@@ -1,7 +1,7 @@
 import { defineTool, ToolError } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseForUser } from "../supabase";
-import type { Tables } from "@/integrations/supabase/types";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 
 type BenefitUpdate = TablesUpdate<"benefits">;
 

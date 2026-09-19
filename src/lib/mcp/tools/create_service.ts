@@ -29,7 +29,7 @@ export default defineTool({
     const { data, error } = await supabase
       .from("services")
       .insert({
-        user_id: ctx.getUserId(),
+        user_id: ctx.getUserId()!,
         name: input.name,
         provider: input.provider ?? null,
         plan_name: input.plan_name ?? null,
