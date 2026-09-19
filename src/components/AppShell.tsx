@@ -11,7 +11,13 @@ const NAV = [
   { to: "/settings", label: "설정" },
 ] as const;
 
-export function AppShell({ children, email }: { children: ReactNode; email?: string | null }) {
+export function AppShell({
+  children,
+  email,
+}: {
+  children: ReactNode;
+  email?: string | null | undefined;
+}) {
   const router = useRouter();
 
   async function signOut() {
