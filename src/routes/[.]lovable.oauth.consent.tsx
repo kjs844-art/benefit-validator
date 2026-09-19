@@ -2,22 +2,16 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import type { OAuthAuthorizationDetails } from "@supabase/supabase-js";
 
-type OAuthDetails = {
-  redirect_url?: string;
-  redirect_to?: string;
-  client?: { name?: string } | null;
-  scopes?: string | string[] | null;
-};
-
-export const Route = createFileRoute("/.lovable/oauth/consent")({
+export const Route = createFileRoute("/[.]lovable/oauth/consent")({
   ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
     authorization_id:
-      typeof search.authorization_id === "string" ? search.authorization_id : "",
+      typeof search["authorization_id"] === "string" ? search["authorization_id"] : "",
   }),
   beforeLoad: async ({ search, location }) => {
-    if (!search.authorization_id) throw new Error("승인 요청 정보가 없습니다.");
+    if (!search["authorization_id"]) throw new Error("승인 요청 정보가 없습니다.");
     const { data } = await supabase.auth.getSession();
     // No session: send the user through the app's auth flow and preserve the
     // consent URL as a same-origin relative path so they return here.
@@ -32,10 +26,10 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
       authorizationId,
     );
     if (error) throw new Error(error.message);
+    if (!data) throw new Error("승인 요청을 찾을 수 없습니다.");
     // Already-approved client: the provider resolves immediately.
-    const immediate = data?.redirect_url ?? data?.redirect_to;
-    if (immediate && !data?.client) throw redirect({ href: immediate });
-    return data;
+    if ("redirect_url" in data) throw redirect({ href: data.redirect_url });
+    return data as OAuthAuthorizationDetails;
   },
   component: Consent,
   errorComponent: ({ error }) => (
@@ -51,12 +45,11 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
 });
 
 function Consent() {
-  const details = Route.useLoaderData() as OAuthDetails | null;
+  const details = Route.useLoaderData();
   const { authorization_id } = Route.useSearch();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: sessionData } = useSessionEmail();
-  const clientName = details?.client?.name ?? "외부 앱";
+  const clientName = details.client?.name ?? "외부 앱";
 
   async function decide(approve: boolean) {
     setBusy(true);
@@ -69,7 +62,7 @@ function Consent() {
       setError(error.message);
       return;
     }
-    const target = data?.redirect_url ?? data?.redirect_to;
+    const target = data?.redirect_url;
     if (!target) {
       setBusy(false);
       setError("이동할 주소가 반환되지 않았습니다. 창을 닫고 다시 시도해 주세요.");
@@ -86,14 +79,12 @@ function Consent() {
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           연결하면 {clientName}가 로그인된 상태에서 이 앱의 도구를 내 계정으로
-          사용할 수 있습니다. 데이터는 내 계정 것만 접근 가능하며, 이 앱의 권한
-          정책과 보안 규칙은 그대로 적용됩니다.
+          사용할 수 있습니다. 내 계정의 데이터에만 접근하며, 이 앱의 권한 정책과
+          보안 규칙은 그대로 적용됩니다.
         </p>
-        {sessionData ? (
-          <p className="mt-3 text-xs text-muted-foreground">
-            로그인된 계정: {sessionData}
-          </p>
-        ) : null}
+        <p className="mt-3 text-xs text-muted-foreground">
+          로그인된 계정: {details.user?.email ?? "알 수 없음"}
+        </p>
         {error ? (
           <p role="alert" className="mt-3 text-sm text-destructive">
             {error}
@@ -115,8 +106,4 @@ function Consent() {
       </div>
     </main>
   );
-}
-
-function useSessionEmail() {
-  return useState<{ data: string | null }>(() => ({ data: null })) as never;
 }
