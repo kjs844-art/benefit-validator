@@ -13,7 +13,7 @@ export const Route = createFileRoute("/auth")({
     const raw = typeof search["next"] === "string" ? search["next"] : "";
     // Same-origin relative path only (no "//", no scheme).
     const next = raw.startsWith("/") && !raw.startsWith("//") && !raw.includes("://") ? raw : "";
-    return { next };
+    return { next: next || undefined };
   },
   head: () => ({
     meta: [
