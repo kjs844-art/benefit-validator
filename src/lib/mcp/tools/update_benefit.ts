@@ -33,11 +33,11 @@ export default defineTool({
     if (input.granted_amount !== undefined) patch.granted_amount = input.granted_amount;
     if (input.monthly_cap !== undefined) patch.monthly_cap = input.monthly_cap;
     if (input.extra_limit_note !== undefined) patch.extra_limit_note = input.extra_limit_note;
-    if (input.reset_rule !== undefined) patch.reset_rule = input.reset_rule;
+    if (input.reset_rule != null) patch.reset_rule = input.reset_rule;
     if (input.reset_anchor !== undefined) patch.reset_anchor = input.reset_anchor;
     if (input.observed_at !== undefined) patch.observed_at = input.observed_at;
-    if (input.observed_precision !== undefined) patch.observed_precision = input.observed_precision;
-    if (input.observed_timezone !== undefined) patch.observed_timezone = input.observed_timezone;
+    if (input.observed_precision != null) patch.observed_precision = input.observed_precision;
+    if (input.observed_timezone != null) patch.observed_timezone = input.observed_timezone;
     if (input.source_note !== undefined) patch.source_note = input.source_note;
     if (Object.keys(patch).length === 0) {
       throw new ToolError("Nothing to update: pass at least one field to change.");
