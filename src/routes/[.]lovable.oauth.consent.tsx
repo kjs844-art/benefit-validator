@@ -10,7 +10,7 @@ type OAuthDetails = {
   scopes?: string | string[] | null;
 };
 
-export const Route = createFileRoute("/[.]lovable/oauth/consent")({
+export const Route = createFileRoute("/.lovable/oauth/consent")({
   ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
     authorization_id:
