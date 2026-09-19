@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,12 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = typeof search["next"] === "string" ? search["next"] : "";
+    // Same-origin relative path only (no "//", no scheme).
+    const next = raw.startsWith("/") && !raw.startsWith("//") && !raw.includes("://") ? raw : "";
+    return { next };
+  },
   head: () => ({
     meta: [
       { title: "로그인 · 남은혜택" },
@@ -28,16 +35,26 @@ const schema = z.object({
 
 function AuthPage() {
   const router = useRouter();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
+  function finishAuth() {
+    if (next) {
+      router.history.push(next);
+    } else {
+      router.navigate({ to: "/dashboard" });
+    }
+  }
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) router.navigate({ to: "/dashboard" });
+      if (data.session) finishAuth();
     });
-  }, [router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -52,7 +69,9 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email: parsed.data.email,
           password: parsed.data.password,
-          options: { emailRedirectTo: window.location.origin },
+          options: {
+            emailRedirectTo: next ? `${window.location.origin}${next}` : window.location.origin,
+          },
         });
         if (error) throw error;
         if (!data.session) {
@@ -60,14 +79,14 @@ function AuthPage() {
           return;
         }
         toast.success("가입이 완료되었습니다.");
-        router.navigate({ to: "/dashboard" });
+        finishAuth();
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: parsed.data.email,
           password: parsed.data.password,
         });
         if (error) throw error;
-        router.navigate({ to: "/dashboard" });
+        finishAuth();
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : "알 수 없는 오류";
@@ -77,6 +96,24 @@ function AuthPage() {
           : message,
       );
     } finally {
+      setBusy(false);
+    }
+  }
+
+  async function socialSignIn(provider: "google" | "microsoft") {
+    setBusy(true);
+    try {
+      // Return to the preserved consent URL when in an OAuth consent flow;
+      // otherwise land on /auth, which forwards signed-in users to the app.
+      const redirect_uri = next
+        ? `${window.location.origin}${next}`
+        : `${window.location.origin}/auth`;
+      const result = await lovable.auth.signInWithOAuth(provider, { redirect_uri });
+      if (result.error) throw result.error;
+      if (!result.redirected) finishAuth();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "소셜 로그인에 실패했습니다.";
+      toast.error(message);
       setBusy(false);
     }
   }
@@ -94,7 +131,32 @@ function AuthPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             내 혜택 데이터는 내 계정에서만 보입니다.
           </p>
-          <form className="mt-5 space-y-4" onSubmit={submit}>
+          <div className="mt-5 grid gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              disabled={busy}
+              onClick={() => socialSignIn("google")}
+            >
+              Google로 계속하기
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              disabled={busy}
+              onClick={() => socialSignIn("microsoft")}
+            >
+              Microsoft로 계속하기
+            </Button>
+          </div>
+          <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            또는 이메일로
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <form className="space-y-4" onSubmit={submit}>
             <div className="space-y-1.5">
               <Label htmlFor="email">이메일</Label>
               <Input
