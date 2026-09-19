@@ -10,6 +10,7 @@ import {
   useDeleteService,
   useSaveBenefit,
   useSaveService,
+  useServices,
   type ServiceDraft,
 } from "@/lib/data";
 import { STATUS_LABELS, type ServiceRecord, type SubscriptionStatus } from "@/lib/benefits";
@@ -179,7 +180,7 @@ function ServiceForm({
 
 function ServicesPage() {
   const { user } = useAuth();
-  const services = useServicesQuery();
+  const services = useServices();
   const benefits = useBenefits();
   const saveService = useSaveService();
   const deleteService = useDeleteService();
@@ -349,11 +350,3 @@ function ServicesPage() {
     </AppShell>
   );
 }
-
-// 별칭: 훅 이름 충돌을 피하기 위한 래퍼
-function useServicesQuery() {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  return useServicesImpl();
-}
-
-import { useServices as useServicesImpl } from "@/lib/data";
