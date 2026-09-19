@@ -98,6 +98,10 @@ ai_usage (user_id, usage_date, call_count)   -- 서버 전용 호출 한도 기�
 
 - 가입 확인 메일 링크는 `window.location.origin` 으로 돌아옵니다.
 - 새 도메인을 쓰면 인증 설정의 Site URL / Redirect URL 목록에 해당 도메인을 추가해야 합니다.
+- Google·Microsoft 소셜 로그인은 Lovable 관리 인증 브로커를 거치므로 별도 OAuth 클라이언트 설정이 필요 없습니다.
+  커스텀 도메인도 브로커가 자동 처리합니다.
+- OAuth 동의 화면은 `/.lovable/oauth/consent` 라우트(`src/routes/[.]lovable.oauth.consent.tsx`)가 담당합니다.
+  이전해도 이 라우트가 같은 코드베이스에 있으면 그대로 동작합니다.
 - 비밀번호 재설정 화면은 아직 없습니다. 추가하려면 `/reset-password` 라우트와
   `supabase.auth.resetPasswordForEmail` 호출을 함께 구현해야 합니다.
 
@@ -126,10 +130,12 @@ ai_usage (user_id, usage_date, call_count)   -- 서버 전용 호출 한도 기�
 
 - [ ] 첫 화면과 `/demo` 가 비로그인 상태에서 열린다
 - [ ] 회원가입 → 확인 메일 링크 → 로그인이 새 도메인에서 동작한다
+- [ ] Google·Microsoft 로그인이 새 도메인에서 동작한다
 - [ ] 서비스 등록, 혜택 추가·수정·삭제가 저장된다
 - [ ] 새로고침과 재로그인 후에도 데이터가 남아 있다
 - [ ] 다른 계정으로 로그인하면 상대방 데이터가 보이지 않는다
 - [ ] AI 분석이 동작하고, 하루 한도 초과 시 서버가 거부한다
 - [ ] 내 데이터 내보내기 JSON 에 본인 데이터만 들어 있다
 - [ ] 존재하지 않는 주소(`/없는주소`)에서 404 화면이 뜬다
+- [ ] `/.well-known/oauth-protected-resource` 와 `/mcp` 가 응답한다 (MCP 클라이언트 연결용)
 - [ ] 모바일 화면 너비에서 주요 화면이 깨지지 않는다
