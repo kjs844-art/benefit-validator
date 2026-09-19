@@ -33,7 +33,7 @@ export default defineTool({
         name: input.name,
         provider: input.provider ?? null,
         plan_name: input.plan_name ?? null,
-        subscription_status: input.subscription_status,
+        subscription_status: input.subscription_status ?? "active",
         trial_ends_at: input.trial_ends_at ?? null,
         notes: input.notes ?? null,
       })

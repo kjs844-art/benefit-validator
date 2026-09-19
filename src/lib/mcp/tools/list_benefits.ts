@@ -2,8 +2,8 @@ import { defineTool, ToolError } from "@lovable.dev/mcp-js";
 import { supabaseForUser } from "../supabase";
 import type { Tables } from "@/integrations/supabase/types";
 
-type ServiceRow = Tables<"services">["Row"];
-type BenefitRow = Tables<"benefits">["Row"];
+type ServiceRow = Tables<"services">;
+type BenefitRow = Tables<"benefits">;
 
 const toServiceJson = (s: ServiceRow) => ({
   id: s.id,

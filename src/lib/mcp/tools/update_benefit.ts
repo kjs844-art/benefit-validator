@@ -3,7 +3,7 @@ import { z } from "zod";
 import { supabaseForUser } from "../supabase";
 import type { Tables } from "@/integrations/supabase/types";
 
-type BenefitUpdate = Tables<"benefits">["Update"];
+type BenefitUpdate = TablesUpdate<"benefits">;
 
 export default defineTool({
   name: "update_benefit",
