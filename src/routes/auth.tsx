@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): { next?: string } => {
     const raw = typeof search["next"] === "string" ? search["next"] : "";
     // Same-origin relative path only (no "//", no scheme).
     const next = raw.startsWith("/") && !raw.startsWith("//") && !raw.includes("://") ? raw : "";
