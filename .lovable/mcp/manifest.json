@@ -1,0 +1,392 @@
+{
+  "version": 1,
+  "sdk_version": "2.3.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://bgvbnmnuxfjarwpztwod.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "benefit-validator",
+      "version": "0.1.0",
+      "title": "Benefit Validator"
+    },
+    "tools": [
+      {
+        "name": "list_benefits",
+        "title": "List services and benefits",
+        "description": "List the signed-in user's subscription services and their recorded benefits (remaining amounts, units, reset rules, and when each value was observed).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_service",
+        "title": "Create a service",
+        "description": "Create a subscription service record (e.g. a streaming plan) for the signed-in user, so benefits can be attached to it.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "description": "Service display name, e.g. 'StreamPlus'."
+            },
+            "provider": {
+              "description": "Company providing the service, if known.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "plan_name": {
+              "description": "Plan name, if known.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "subscription_status": {
+              "default": "active",
+              "type": "string",
+              "enum": [
+                "active",
+                "trial",
+                "trial_ended",
+                "paused",
+                "cancelled",
+                "unknown"
+              ]
+            },
+            "trial_ends_at": {
+              "description": "ISO 8601 timestamp when a free trial ends; omit unless the material states it.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "notes": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "add_benefit",
+        "title": "Add a benefit",
+        "description": "Record a benefit (coupon, credit, capacity, etc.) for one of the user's services. Omit unknown amounts — null means 'unknown', 0 means an actual zero.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "service_id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Target service id from list_benefits or create_service."
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "description": "Benefit name, e.g. 'Offline downloads'."
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "description": "Unit exactly as the material states it, e.g. '개', 'GB', '회'."
+            },
+            "granted_amount": {
+              "description": "Amount granted per period; omit when unknown.",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "remaining_amount": {
+              "description": "Remaining amount at observation time; omit when unknown.",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "monthly_cap": {
+              "description": "Monthly cap stated by the material, if any.",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "extra_limit_note": {
+              "description": "Any additional restriction the material states.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 500
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reset_rule": {
+              "default": "unknown",
+              "type": "string",
+              "enum": [
+                "none",
+                "daily",
+                "weekly",
+                "monthly",
+                "yearly",
+                "custom",
+                "unknown"
+              ]
+            },
+            "reset_anchor": {
+              "description": "Reset anchor (e.g. '매월 1일') when stated.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "observed_at": {
+              "type": "string",
+              "minLength": 1,
+              "description": "ISO 8601 timestamp of when the value was actually observed. Never fabricate a precise time: if the material only has a date, give midnight in observed_timezone and set observed_precision to 'day'."
+            },
+            "observed_precision": {
+              "default": "minute",
+              "type": "string",
+              "enum": [
+                "minute",
+                "day"
+              ]
+            },
+            "observed_timezone": {
+              "default": "Asia/Seoul",
+              "type": "string"
+            },
+            "source_note": {
+              "description": "Where this value came from.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "service_id",
+            "name",
+            "unit",
+            "observed_at"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_benefit",
+        "title": "Update a benefit",
+        "description": "Update fields of one of the user's recorded benefits (e.g. a new remaining amount after re-checking). Only the fields you pass are changed.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Benefit id from list_benefits."
+            },
+            "remaining_amount": {
+              "description": "New remaining amount; null records 'unknown'.",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "granted_amount": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "monthly_cap": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "extra_limit_note": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 500
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reset_rule": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "daily",
+                    "weekly",
+                    "monthly",
+                    "yearly",
+                    "custom",
+                    "unknown"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reset_anchor": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "observed_at": {
+              "type": "string",
+              "minLength": 1,
+              "description": "ISO 8601 timestamp of the new observation; set alongside a new value."
+            },
+            "observed_precision": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "minute",
+                    "day"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "observed_timezone": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_note": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "observed_at"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "delete_benefit",
+        "title": "Delete a benefit",
+        "description": "Permanently delete one of the user's recorded benefits by id.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Benefit id from list_benefits."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
