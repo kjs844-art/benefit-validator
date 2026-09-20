@@ -11,7 +11,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export const EXPORT_FORMAT_VERSION = "namun-hyetaek.export.v1";
+export const EXPORT_FORMAT_VERSION = "namun-hyetaek.export.v2";
 
 export const exportMyData = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])

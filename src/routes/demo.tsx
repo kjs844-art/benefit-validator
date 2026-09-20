@@ -100,7 +100,7 @@ function DemoPage() {
           <div>
             <h2 className="text-lg font-semibold">메일에서 확인된 가입 서비스</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              샘플 메일 분석 결과입니다. 실제 Gmail 연결이나 메일 원문은 사용하지 않습니다.
+              디자인 스튜디오는 샘플 메일 분석 결과입니다. 실제 Gmail 연결이나 메일 원문은 사용하지 않습니다.
             </p>
           </div>
           {data.services.map((service) => {
