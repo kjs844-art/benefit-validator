@@ -16,7 +16,13 @@
 - [x] GitHub 코드 동기화(Git sync) 연결 — kjs844-art/benefit-validator 저장소 생성, 실시간 양방향 동기화 확인(최신 커밋 f7c05de 반영)
 - [x] Google 연결 후 메일에서 발견한 혜택을 카테고리별로 바로 보여주는 주 흐름으로 개편
 - [x] 수동 서비스 등록·별도 AI 분석을 주 흐름과 메뉴에서 제거
-- [ ] 로그인된 실제 계정으로 Google 연결→발견 결과 전체 흐름 검증 — Google 공개 전환 대기
-- [ ] Google OAuth를 일반 사용자 공개 상태로 전환하고 Gmail 연결 403 해소 — 공개 문서 준비 완료, Google Cloud 게시 설정 필요
-- [ ] Google 연결 실사용 검증 완료 후 공개 배포본 업데이트 — Google 공개 전환 대기
-- [x] Google OAuth 공개 전환용 개인정보처리방침·서비스 이용약관 페이지 추가
+- [x] 로그인된 실제 계정으로 Google 연결→발견 결과 전체 흐름 검증 — kjs844@gmail.com 실제 연결·자동 스캔 성공: 21개 서비스 53건 발견(2026-09-20)
+- [x] Google OAuth 일반 사용자 공개 전환 — 프로덕션 전환 완료(사용자 확인), Gmail 연결 403 해소
+- [x] 공개 배포 완료 — https://benefit-buddy-check.lovable.app (고정 제출 링크)
+
+## 제출 후 정식 제품화 (점진적)
+- [ ] 도메인 연결 — 프로젝트 설정 → 도메인, 연결 후 Google 브랜딩 링크 3개(홈페이지·개인정보처리방침·약관) 갱신
+- [ ] Google 앱 검증(verification) — gmail.readonly 민감 범위, 사용자 100명 초과 전 필요. 동의 화면 "확인되지 않은 앱" 경고 해소
+- [ ] DB·서버 교체/수정 검토 — 현재 Lovable Cloud(Supabase). 외부 이전 시 export 형식(v2), RLS·암호화 키(APP_USER_CONNECTION_KEY_SECRET) 마이그레이션 포함 설계
+- [ ] 디자인 심화 — og:image 전용 이미지(1200x630), favicon 교체, shadcn button/input 다듬기, MCP 동의·Gmail 복귀 화면 위계 정리, BenefitForm 3분할
+- [ ] 사용자 피드백 기반 기능 고도화 (네이버·카카오 직접 연동 재검토 포함)
