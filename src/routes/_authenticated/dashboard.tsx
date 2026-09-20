@@ -77,16 +77,16 @@ function Dashboard() {
         <>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {Object.entries(totals).map(([unit, total]) => (
-              <div key={unit} className="surface-panel p-4">
+              <div key={unit} className="surface-panel surface-panel-hover p-4">
                 <p className="text-xs text-muted-foreground">단위 {unit} 합계 (아는 값만)</p>
-                <p className="mt-1 text-2xl font-semibold text-primary">
+                <p className="tnum mt-1 text-2xl font-bold text-primary">
                   {formatAmount(total, unit)}
                 </p>
               </div>
             ))}
-            <div className="surface-panel p-4">
+            <div className="surface-panel surface-panel-hover p-4">
               <p className="text-xs text-muted-foreground">다시 확인이 필요한 항목</p>
-              <p className="mt-1 text-2xl font-semibold text-unknown">{stale.length}건</p>
+              <p className="tnum mt-1 text-2xl font-bold text-unknown">{stale.length}건</p>
             </div>
           </div>
 

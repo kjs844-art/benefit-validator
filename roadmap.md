@@ -12,3 +12,4 @@
 - [x] X(Twitter) 연결 — 사용자 요청으로 건너뜀
 - [ ] "구글 계정만으로 가입 사이트·잔여 크레딧 조회" 요청의 가능 범위 정리 (Google이 타사 가입 목록/크레딧 잔량 API를 제공하지 않음을 근거와 함께 설명)
 - [x] Gmail 연결 흐름 실검증: 가입→/gmail→연결 버튼→실제 Google 로그인 화면(accounts.google.com) 팝업 확인. Google 로그인 이후 동의~분석은 사용자 본인 계정 필요
+- [x] 전체 화면 디자인 개선: taste 스킬 적용 — Libre Baskerville+IBM Plex Sans KR 글꼴, 잉크+민트 유지, 숫자 tabular 정렬, 카드 호버/그림자, 그레인 질감, 첫 화면 히어로 재구성. tsgo 통과, 데스크톱·모바일 캡처 확인, 넘침 없음, 콘솔 오류 없음

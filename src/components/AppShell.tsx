@@ -28,9 +28,9 @@ export function AppShell({
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
-          <Link to="/dashboard" className="text-base font-semibold tracking-tight">
+          <Link to="/dashboard" className="font-display text-lg font-bold tracking-tight">
             남은혜택
           </Link>
           <nav className="flex flex-1 flex-wrap gap-1 text-sm">
@@ -38,8 +38,11 @@ export function AppShell({
               <Link
                 key={item.to}
                 to={item.to}
-                className="rounded-md px-2.5 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                activeProps={{ className: "rounded-md px-2.5 py-1.5 bg-accent text-foreground" }}
+                className="rounded-md px-2.5 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+                activeProps={{
+                  className:
+                    "rounded-md px-2.5 py-1.5 bg-primary/10 font-medium text-primary",
+                }}
               >
                 {item.label}
               </Link>

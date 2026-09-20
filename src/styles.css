@@ -8,9 +8,14 @@
  * 남은혜택 design system.
  * Ink-dark surfaces, mint signal for "remaining", amber for "unknown",
  * rose for "expired". All colors are oklch tokens — never hardcode in components.
+ * Display: Libre Baskerville (editorial headings), Body: IBM Plex Sans KR.
  */
 
 @theme inline {
+  --font-sans: "IBM Plex Sans KR", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Libre Baskerville", "IBM Plex Sans KR", ui-serif, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -49,41 +54,41 @@
 }
 
 :root {
-  --radius: 0.75rem;
-  --background: oklch(0.17 0.02 250);
-  --foreground: oklch(0.96 0.005 250);
-  --card: oklch(0.22 0.022 252);
-  --card-foreground: oklch(0.96 0.005 250);
-  --popover: oklch(0.22 0.022 252);
-  --popover-foreground: oklch(0.96 0.005 250);
-  --primary: oklch(0.82 0.15 165);
-  --primary-foreground: oklch(0.19 0.03 175);
-  --secondary: oklch(0.28 0.025 252);
-  --secondary-foreground: oklch(0.95 0.005 250);
-  --muted: oklch(0.26 0.02 252);
-  --muted-foreground: oklch(0.72 0.02 250);
-  --accent: oklch(0.31 0.03 252);
-  --accent-foreground: oklch(0.96 0.005 250);
-  --destructive: oklch(0.63 0.2 20);
+  --radius: 0.5rem;
+  --background: oklch(0.16 0.018 250);
+  --foreground: oklch(0.95 0.005 250);
+  --card: oklch(0.21 0.02 252);
+  --card-foreground: oklch(0.95 0.005 250);
+  --popover: oklch(0.21 0.02 252);
+  --popover-foreground: oklch(0.95 0.005 250);
+  --primary: oklch(0.8 0.14 165);
+  --primary-foreground: oklch(0.2 0.03 175);
+  --secondary: oklch(0.27 0.022 252);
+  --secondary-foreground: oklch(0.94 0.005 250);
+  --muted: oklch(0.25 0.018 252);
+  --muted-foreground: oklch(0.7 0.02 250);
+  --accent: oklch(0.3 0.028 252);
+  --accent-foreground: oklch(0.95 0.005 250);
+  --destructive: oklch(0.63 0.19 20);
   --destructive-foreground: oklch(0.98 0.005 250);
-  --unknown: oklch(0.79 0.14 78);
+  --unknown: oklch(0.78 0.13 78);
   --unknown-foreground: oklch(0.22 0.04 78);
-  --border: oklch(0.32 0.02 252);
-  --input: oklch(0.32 0.02 252);
-  --ring: oklch(0.82 0.15 165);
-  --sidebar: oklch(0.2 0.02 252);
-  --sidebar-foreground: oklch(0.96 0.005 250);
-  --sidebar-primary: oklch(0.82 0.15 165);
-  --sidebar-primary-foreground: oklch(0.19 0.03 175);
-  --sidebar-accent: oklch(0.28 0.025 252);
-  --sidebar-accent-foreground: oklch(0.96 0.005 250);
-  --sidebar-border: oklch(0.32 0.02 252);
-  --sidebar-ring: oklch(0.82 0.15 165);
+  --border: oklch(0.3 0.018 252);
+  --input: oklch(0.3 0.018 252);
+  --ring: oklch(0.8 0.14 165);
+  --sidebar: oklch(0.19 0.018 252);
+  --sidebar-foreground: oklch(0.95 0.005 250);
+  --sidebar-primary: oklch(0.8 0.14 165);
+  --sidebar-primary-foreground: oklch(0.2 0.03 175);
+  --sidebar-accent: oklch(0.27 0.022 252);
+  --sidebar-accent-foreground: oklch(0.94 0.005 250);
+  --sidebar-border: oklch(0.3 0.018 252);
+  --sidebar-ring: oklch(0.8 0.14 165);
 }
 
 .dark {
-  --background: oklch(0.17 0.02 250);
-  --foreground: oklch(0.96 0.005 250);
+  --background: oklch(0.16 0.018 250);
+  --foreground: oklch(0.95 0.005 250);
 }
 
 @layer base {
@@ -91,10 +96,59 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Subtle grain so large dark surfaces don't feel flat. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-primary) 32%, transparent);
+  }
+
+  :where(a, button, [role="button"], input, select, textarea) {
+    transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  :where(a, button, [role="button"]):active {
+    transform: scale(0.98);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
   }
 }
 
@@ -102,4 +156,50 @@
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
+  box-shadow: 0 1px 0 0 oklch(1 0 0 / 0.03) inset, 0 12px 32px -20px oklch(0.05 0.02 250 / 0.9);
+}
+
+@utility surface-panel-hover {
+  transition: border-color 200ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.surface-panel-hover:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 35%, var(--color-border));
+  transform: translateY(-1px);
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility hero-glow {
+  background:
+    radial-gradient(60rem 28rem at 18% -8%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent 65%),
+    radial-gradient(44rem 24rem at 88% 4%, color-mix(in oklab, var(--color-unknown) 7%, transparent), transparent 60%);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility rise {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@utility rise-1 {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.08s both;
+}
+
+@utility rise-2 {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.16s both;
+}
+
+@utility rise-3 {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.24s both;
 }
