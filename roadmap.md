@@ -8,7 +8,7 @@
 - [x] Microsoft 메일 연결은 제출판에서 제외
 - [x] 네이버·카카오 메일은 파일·캡처 가져오기로 지원하고 직접 연동은 보류
 - [ ] 디자인 개선(텍스트 과다·PPT 느낌 정리 포함)은 제출 기능 완료 후로 보류
-- [ ] Google 서비스 연결 (Calendar/Drive/Sheets/Docs 등)
+- [x] Google 서비스 연결 (Calendar/Drive/Sheets/Docs 등) — 빌더 계정 데이터 접근용
 - [x] X(Twitter) 연결 — 사용자 요청으로 건너뜀
 - [ ] "구글 계정만으로 가입 사이트·잔여 크레딧 조회" 요청의 가능 범위 정리 (Google이 타사 가입 목록/크레딧 잔량 API를 제공하지 않음을 근거와 함께 설명)
 - [x] Gmail 연결 흐름 실검증: 가입→/gmail→연결 버튼→실제 Google 로그인 화면(accounts.google.com) 팝업 확인. Google 로그인 이후 동의~분석은 사용자 본인 계정 필요
