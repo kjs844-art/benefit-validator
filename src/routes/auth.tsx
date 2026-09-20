@@ -100,7 +100,7 @@ function AuthPage() {
     }
   }
 
-  async function socialSignIn(provider: "google" | "microsoft") {
+  async function socialSignIn(provider: "google") {
     setBusy(true);
     try {
       // Return to the preserved consent URL when in an OAuth consent flow;
@@ -140,15 +140,6 @@ function AuthPage() {
               onClick={() => socialSignIn("google")}
             >
               Google로 계속하기
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              disabled={busy}
-              onClick={() => socialSignIn("microsoft")}
-            >
-              Microsoft로 계속하기
             </Button>
           </div>
           <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
