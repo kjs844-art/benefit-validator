@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { ServiceHeading } from "@/components/ServiceHeading";
+import { EmptyState, PageHeader } from "@/components/page";
 import { BenefitCard } from "@/components/BenefitCard";
 import { BenefitForm, emptyBenefitDraft, type BenefitDraft } from "@/components/BenefitForm";
 import { useAuth } from "@/hooks/useAuth";
@@ -33,7 +35,10 @@ export const Route = createFileRoute("/_authenticated/services")({
   head: () => ({
     meta: [
       { title: "서비스·혜택 · 남은혜택" },
-      { name: "description", content: "구독 서비스 계정을 등록하고 혜택을 직접 입력·수정·삭제합니다." },
+      {
+        name: "description",
+        content: "구독 서비스 계정을 등록하고 혜택을 직접 입력·수정·삭제합니다.",
+      },
       { property: "og:title", content: "서비스·혜택 · 남은혜택" },
       { property: "og:description", content: "서비스와 혜택 기록 관리." },
       { property: "og:type", content: "website" },
@@ -77,7 +82,7 @@ function ServiceForm({
   }
   return (
     <form
-      className="surface-panel space-y-4 p-4"
+      className="surface-panel space-y-4 p-5"
       onSubmit={(e) => {
         e.preventDefault();
         const parsed = serviceSchema.safeParse({ name: draft.name });
@@ -206,18 +211,15 @@ function ServicesPage() {
 
   return (
     <AppShell email={user?.email}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">서비스·혜택</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            서비스와 혜택을 직접 등록해 관리합니다.
-          </p>
-        </div>
-        <Button onClick={() => setServiceForm(emptyService())}>서비스 추가</Button>
-      </div>
+      <PageHeader
+        eyebrow="직접 기록"
+        title="서비스·혜택"
+        description="가입한 서비스를 등록하고 그 안의 혜택을 직접 기록합니다. 빈 칸은 0이 아니라 모름으로 저장됩니다."
+        actions={<Button onClick={() => setServiceForm(emptyService())}>서비스 추가</Button>}
+      />
 
       {serviceForm ? (
-        <div className="mt-4">
+        <div className="mt-6">
           <ServiceForm
             initial={serviceForm}
             busy={saveService.isPending}
@@ -236,56 +238,61 @@ function ServicesPage() {
       ) : null}
 
       {services.isLoading ? (
-        <Skeleton className="mt-6 h-40" />
+        <Skeleton className="mt-6 h-40 rounded-lg" />
       ) : services.error ? (
-        <p className="mt-6 text-sm text-destructive">데이터를 불러오지 못했습니다.</p>
+        <p className="mt-6 rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          데이터를 불러오지 못했습니다.
+        </p>
       ) : (services.data ?? []).length === 0 ? (
-        <p className="mt-6 text-sm text-muted-foreground">등록된 서비스가 없습니다.</p>
+        <div className="mt-6">
+          <EmptyState
+            title="등록된 서비스가 없습니다."
+            description="서비스 추가를 눌러 가입한 서비스를 하나 등록하면, 그 아래에 혜택을 기록할 수 있습니다."
+          />
+        </div>
       ) : (
-        <div className="mt-6 space-y-8">
+        <div className="mt-8 space-y-10">
           {(services.data ?? []).map((service) => {
             const list = (benefits.data ?? []).filter((b) => b.service_id === service.id);
             return (
-              <section key={service.id} className="space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <h2 className="text-lg font-semibold">{service.name}</h2>
-                    <p className="text-xs text-muted-foreground">
-                      {service.plan_name ?? "요금제 모름"} ·{" "}
-                      {STATUS_LABELS[service.subscription_status]}
-                      {service.account_label ? ` · ${service.account_label}` : ""}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setBenefitForm(emptyBenefitDraft(service.id, service.timezone))}
-                    >
-                      혜택 추가
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setServiceForm(serviceToDraft(service))}
-                    >
-                      서비스 수정
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => {
-                        if (!confirm(`'${service.name}' 과(와) 그 혜택을 모두 삭제할까요?`)) return;
-                        deleteService.mutate(service.id, {
-                          onSuccess: () => toast.success("삭제했습니다."),
-                          onError: (e) => toast.error(`삭제 실패: ${e.message}`),
-                        });
-                      }}
-                    >
-                      삭제
-                    </Button>
-                  </div>
-                </div>
+              <section key={service.id} className="space-y-4">
+                <ServiceHeading
+                  service={service}
+                  actions={
+                    <>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          setBenefitForm(emptyBenefitDraft(service.id, service.timezone))
+                        }
+                      >
+                        혜택 추가
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setServiceForm(serviceToDraft(service))}
+                      >
+                        서비스 수정
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          if (!confirm(`'${service.name}' 과(와) 그 혜택을 모두 삭제할까요?`))
+                            return;
+                          deleteService.mutate(service.id, {
+                            onSuccess: () => toast.success("삭제했습니다."),
+                            onError: (e) => toast.error(`삭제 실패: ${e.message}`),
+                          });
+                        }}
+                      >
+                        삭제
+                      </Button>
+                    </>
+                  }
+                />
 
                 {benefitForm && benefitForm.service_id === service.id ? (
                   <BenefitForm
@@ -305,9 +312,11 @@ function ServicesPage() {
                 ) : null}
 
                 {list.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">등록된 혜택이 없습니다.</p>
+                  <p className="text-sm text-muted-foreground">
+                    아직 기록된 혜택이 없습니다. 혜택 추가를 눌러 시작하세요.
+                  </p>
                 ) : (
-                  <div className="grid gap-3 md:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-2">
                     {list.map((b) => (
                       <BenefitCard
                         key={b.id}

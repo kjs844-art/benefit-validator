@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/AppShell";
+import { DetailRow } from "@/components/figures";
+import { PageHeader, SectionHeading } from "@/components/page";
 import { useAuth } from "@/hooks/useAuth";
 import { exportMyData } from "@/lib/export.functions";
 import { Button } from "@/components/ui/button";
@@ -49,34 +51,43 @@ function SettingsPage() {
 
   return (
     <AppShell email={user?.email}>
-      <h1 className="text-2xl font-bold">설정</h1>
+      <PageHeader
+        eyebrow="계정과 데이터"
+        title="설정"
+        description="기록한 데이터를 내려받고, 연결 상태를 확인합니다."
+      />
 
-      <section className="surface-panel mt-5 p-5">
-        <h2 className="text-lg font-semibold">내 데이터 내보내기</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          내 서비스·혜택·메일 분석 기록을 JSON 파일로 저장합니다. 단위, 시간대, 출처 종류, 근거 메일의
-          날짜와 제목, 마지막 확인 시점이 보존되며 내보낸 시각과 파일 형식 버전이 함께 기록됩니다.
+      <section className="surface-panel mt-8 p-6">
+        <SectionHeading
+          title="내 데이터 내보내기"
+          description="서비스, 혜택, 메일 분석 기록을 JSON 파일 하나로 저장합니다."
+        />
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          단위, 시간대, 출처 종류, 근거 메일의 날짜와 제목, 마지막 확인 시점이 그대로 보존되며,
+          내보낸 시각과 파일 형식 버전이 함께 기록됩니다.
         </p>
-        <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
-          <li>· 다른 사용자의 데이터는 포함되지 않습니다.</li>
-          <li>· 비밀번호, 로그인 토큰, 서버 비밀키는 포함되지 않습니다.</li>
+        <ul className="mt-4 space-y-2 border-t border-hairline pt-4 text-xs leading-relaxed text-muted-foreground">
+          <li>다른 사용자의 데이터는 포함되지 않습니다.</li>
+          <li>비밀번호, 로그인 토큰, 서버 비밀키는 포함되지 않습니다.</li>
           <li>
-            · 이 기능은 <strong>내 데이터</strong>만 내보냅니다. 앱의 소스 코드나 로그인 시스템 자체를
-            옮기는 기능이 아닙니다 (이전 방법은 DEPLOYMENT.md 참고).
+            내 데이터만 내보냅니다. 앱의 소스 코드나 로그인 시스템을 옮기는 기능이 아닙니다 (이전
+            방법은 DEPLOYMENT.md를 참고하세요).
           </li>
         </ul>
-        <Button className="mt-4" onClick={download} disabled={busy}>
+        <Button className="mt-5" onClick={download} disabled={busy}>
           {busy ? "준비 중…" : "JSON 내려받기"}
         </Button>
       </section>
 
-      <section className="surface-panel mt-4 p-5">
-        <h2 className="text-lg font-semibold">계정</h2>
-        <p className="mt-2 text-sm text-muted-foreground">로그인 이메일: {user?.email ?? "-"}</p>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Gmail은 사용자가 별도로 승인한 경우에만 읽기 전용으로 연결됩니다. 메일을 보내거나 수정·삭제하지
-          않으며, 백그라운드 자동 동기화 없이 사용자가 분석 버튼을 누를 때만 확인합니다.
-        </p>
+      <section className="surface-panel mt-4 p-6">
+        <SectionHeading title="계정" />
+        <dl className="mt-4 border-t border-hairline pt-4">
+          <DetailRow label="로그인 이메일">{user?.email ?? "-"}</DetailRow>
+          <DetailRow label="Gmail">
+            사용자가 별도로 승인한 경우에만 읽기 전용으로 연결됩니다. 메일을 보내거나 수정, 삭제하지
+            않으며, 백그라운드 자동 동기화 없이 분석 버튼을 누를 때만 확인합니다.
+          </DetailRow>
+        </dl>
       </section>
     </AppShell>
   );

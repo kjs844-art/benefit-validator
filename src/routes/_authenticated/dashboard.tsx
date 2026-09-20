@@ -1,15 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { BenefitCard } from "@/components/BenefitCard";
+import { ServiceHeading } from "@/components/ServiceHeading";
+import { Amount, StatStrip } from "@/components/figures";
+import { EmptyState, PageHeader } from "@/components/page";
 import { useBenefits, useServices } from "@/lib/data";
 import { useAuth } from "@/hooks/useAuth";
-import {
-  formatAmount,
-  isObservationStale,
-  nextResetAt,
-  STATUS_LABELS,
-  sumByUnit,
-} from "@/lib/benefits";
+import { isObservationStale, nextResetAt, sumByUnit } from "@/lib/benefits";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -40,57 +37,74 @@ function Dashboard() {
 
   return (
     <AppShell email={user?.email}>
-      <h1 className="text-2xl font-bold">대시보드</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        확인된 혜택을 있는 그대로 모았습니다.
-      </p>
+      <PageHeader
+        eyebrow="한눈에 보기"
+        title="대시보드"
+        description="확인된 혜택을 있는 그대로 모았습니다. 모르는 값은 채우지 않고 모름으로 둡니다."
+      />
 
       {loading ? (
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
+        <div className="mt-6 space-y-8">
+          <Skeleton className="h-24 rounded-lg" />
+          <div className="grid gap-4 md:grid-cols-2">
+            <Skeleton className="h-64 rounded-lg" />
+            <Skeleton className="h-64 rounded-lg" />
+          </div>
         </div>
       ) : error ? (
-        <div className="mt-6 rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm">
+        <p className="mt-6 rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
           데이터를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.
-        </div>
+        </p>
       ) : serviceList.length === 0 ? (
-        <div className="surface-panel mt-6 p-6 text-sm">
-          <p className="font-medium">아직 등록된 서비스가 없습니다.</p>
-          <p className="mt-1 text-muted-foreground">
-            먼저 서비스를 등록하고 혜택을 추가해 보세요. 자료를 붙여넣어 AI로 정리할 수도 있습니다.
-          </p>
-          <div className="mt-4 flex gap-2">
-            <Link
-              to="/services"
-              className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
-            >
-              서비스 등록
-            </Link>
-            <Link to="/analyze" className="rounded-md border border-border px-3 py-1.5 text-sm">
-              AI 분석으로 시작
-            </Link>
-          </div>
+        <div className="mt-6">
+          <EmptyState
+            title="아직 등록된 서비스가 없습니다."
+            description="서비스를 하나 등록하고 혜택을 추가해 보세요. 안내문을 붙여넣거나 화면을 캡처해 AI로 정리할 수도 있습니다."
+            actions={
+              <>
+                <Link
+                  to="/services"
+                  className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+                >
+                  서비스 등록
+                </Link>
+                <Link
+                  to="/analyze"
+                  className="rounded-md border border-input px-4 py-2 text-sm font-semibold hover:bg-accent"
+                >
+                  AI 분석으로 시작
+                </Link>
+              </>
+            }
+          />
         </div>
       ) : (
         <>
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {Object.entries(totals).map(([unit, total]) => (
-              <div key={unit} className="surface-panel surface-panel-hover p-4">
-                <p className="text-xs text-muted-foreground">단위 {unit} 합계 (아는 값만)</p>
-                <p className="tnum mt-1 text-2xl font-bold text-primary">
-                  {formatAmount(total, unit)}
-                </p>
-              </div>
-            ))}
-            <div className="surface-panel surface-panel-hover p-4">
-              <p className="text-xs text-muted-foreground">다시 확인이 필요한 항목</p>
-              <p className="tnum mt-1 text-2xl font-bold text-unknown">{stale.length}건</p>
-            </div>
+          <div className="mt-6">
+            <StatStrip
+              items={[
+                ...Object.entries(totals).map(([unit, total]) => ({
+                  label: `${unit} 합계`,
+                  value: <Amount value={total} unit={unit} tone="primary" size="lg" />,
+                  hint: "아는 값만 더합니다",
+                })),
+                {
+                  label: "다시 확인 필요",
+                  value: (
+                    <span className="figure-num text-3xl text-unknown">
+                      {stale.length}
+                      <span className="ml-1.5 font-sans text-sm font-normal text-muted-foreground">
+                        건
+                      </span>
+                    </span>
+                  ),
+                  hint: "리셋 시각이 지난 항목",
+                },
+              ]}
+            />
           </div>
 
-          <div className="mt-8 space-y-6">
+          <div className="mt-12 space-y-10">
             {serviceList.map((service) => {
               const list = benefitList.filter((b) => b.service_id === service.id);
               const next = list
@@ -98,24 +112,12 @@ function Dashboard() {
                 .filter((d): d is Date => d !== null)
                 .sort((a, b) => a.getTime() - b.getTime())[0];
               return (
-                <section key={service.id} className="space-y-3">
-                  <div className="flex flex-wrap items-baseline gap-2">
-                    <h2 className="text-lg font-semibold">{service.name}</h2>
-                    <span className="text-xs text-muted-foreground">
-                      {service.plan_name ?? "요금제 모름"} ·{" "}
-                      {STATUS_LABELS[service.subscription_status]}
-                    </span>
-                    {next ? (
-                      <span className="text-xs text-muted-foreground">
-                        다음 리셋{" "}
-                        {new Intl.DateTimeFormat("ko-KR", { dateStyle: "medium" }).format(next)}
-                      </span>
-                    ) : null}
-                  </div>
+                <section key={service.id}>
+                  <ServiceHeading service={service} next={next} />
                   {list.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">등록된 혜택이 없습니다.</p>
+                    <p className="mt-4 text-sm text-muted-foreground">등록된 혜택이 없습니다.</p>
                   ) : (
-                    <div className="grid gap-3 md:grid-cols-2">
+                    <div className="mt-4 grid gap-4 md:grid-cols-2">
                       {list.map((b) => (
                         <BenefitCard key={b.id} benefit={b} />
                       ))}
