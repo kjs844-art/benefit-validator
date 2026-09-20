@@ -21,12 +21,6 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const STEPS = [
-  { no: "01", title: "Gmail 연결", body: "읽기 전용으로만 연결합니다." },
-  { no: "02", title: "혜택 발견", body: "가입·체험·크레딧 안내 메일을 찾습니다." },
-  { no: "03", title: "한눈에 확인", body: "근거 메일과 함께 정리해 보여줍니다." },
-];
-
 const MOCK_CARDS = [
   {
     service: "디자인 스튜디오",
@@ -91,9 +85,8 @@ function Landing() {
               <br />
               기억합니다.
             </h1>
-            <p className="rise-2 mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
-              무료 체험·크레딧·쿠폰 안내 메일을 찾아, 근거와 함께 있는 그대로
-              보여드립니다.
+            <p className="rise-2 mt-5 text-base text-muted-foreground">
+              무료 체험·크레딧·쿠폰, 있는 그대로.
             </p>
             <div className="rise-3 mt-8 flex flex-wrap gap-3">
               <Link
