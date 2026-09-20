@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -23,6 +23,9 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/analyze")({
+  beforeLoad: () => {
+    throw redirect({ to: "/gmail" });
+  },
   head: () => ({
     meta: [
       { title: "AI 자료 분석 · 남은혜택" },

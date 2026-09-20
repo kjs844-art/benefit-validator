@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { BenefitCard } from "@/components/BenefitCard";
@@ -30,6 +30,9 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 export const Route = createFileRoute("/_authenticated/services")({
+  beforeLoad: () => {
+    throw redirect({ to: "/gmail" });
+  },
   head: () => ({
     meta: [
       { title: "서비스·혜택 · 남은혜택" },
