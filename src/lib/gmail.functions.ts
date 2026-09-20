@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { createOpenAI } from "@ai-sdk/openai";
@@ -76,6 +75,11 @@ function textFromPart(part?: GmailPart): string {
 
 function header(message: GmailMessage, name: string) {
   return message.payload?.headers?.find((item) => item.name?.toLowerCase() === name.toLowerCase())?.value ?? "";
+}
+
+async function hashMessageId(value: string) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 async function gmailRequest(connectionAPIKey: string, path: string) {
@@ -176,6 +180,13 @@ export const scanGmail = createServerFn({ method: "POST" })
     const key = await getConnectionKeyForUser(context.userId, CONNECTOR_ID);
     if (!key) throw new Error("먼저 Gmail을 연결해 주세요.");
 
+    const query = "newer_than:2y {subject:가입 subject:welcome subject:trial subject:체험 subject:coupon subject:쿠폰 subject:credit subject:크레딧 subject:포인트 subject:receipt subject:영수증 subject:subscription subject:구독 subject:만료}";
+    const listed = await gmailRequest(key, `/gmail/v1/users/me/messages?maxResults=30&q=${encodeURIComponent(query)}`);
+    if (listed.reconnectRequired) return { reconnectRequired: true, discoveries: [], warnings: [] };
+    const listBody = (await listed.response.json()) as { messages?: Array<{ id?: string }> };
+    const ids = (listBody.messages ?? []).flatMap((message) => (message.id ? [message.id] : []));
+    if (ids.length === 0) return { reconnectRequired: false, discoveries: [], warnings: ["최근 2년 메일에서 분석 후보를 찾지 못했습니다."] };
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: remaining, error: quotaError } = await supabaseAdmin.rpc("consume_ai_quota", {
       _user_id: context.userId,
@@ -183,13 +194,6 @@ export const scanGmail = createServerFn({ method: "POST" })
     });
     if (quotaError) throw new Error("AI 사용량을 확인하지 못했습니다.");
     if (typeof remaining === "number" && remaining < 0) throw new Error(`오늘의 AI 분석 한도(${DAILY_AI_LIMIT}회)를 모두 사용했습니다.`);
-
-    const query = "newer_than:2y {subject:가입 subject:welcome subject:trial subject:체험 subject:coupon subject:쿠폰 subject:credit subject:크레딧 subject:포인트 subject:receipt subject:영수증 subject:subscription subject:구독 subject:만료}";
-    const listed = await gmailRequest(key, `/gmail/v1/users/me/messages?maxResults=30&q=${encodeURIComponent(query)}`);
-    if (listed.reconnectRequired) return { reconnectRequired: true, discoveries: [], warnings: [] };
-    const listBody = (await listed.response.json()) as { messages?: Array<{ id?: string }> };
-    const ids = (listBody.messages ?? []).flatMap((message) => (message.id ? [message.id] : []));
-    if (ids.length === 0) return { reconnectRequired: false, discoveries: [], warnings: ["최근 2년 메일에서 분석 후보를 찾지 못했습니다."] };
 
     const messages: Array<{ id: string; date: string; subject: string; body: string }> = [];
     for (const id of ids) {
@@ -224,10 +228,10 @@ export const scanGmail = createServerFn({ method: "POST" })
       providerOptions: { openai: { forceReasoning: true, reasoningEffort: "low", store: false } },
     });
     const extracted = await result.output;
-    const rows = extracted.discoveries.flatMap((item) => {
+    const rows = await Promise.all(extracted.discoveries.flatMap((item) => {
       const evidence = messages[item.evidence_message_index];
       if (!evidence) return [];
-      return [{
+      return [(async () => ({
         user_id: context.userId,
         service_name: item.service_name,
         benefit_kind: item.benefit_kind,
@@ -242,9 +246,9 @@ export const scanGmail = createServerFn({ method: "POST" })
         evidence_subject: evidence.subject.slice(0, 500),
         confidence: item.confidence,
         source_provider: "gmail",
-        source_message_id_hash: createHash("sha256").update(evidence.id).digest("hex"),
-      }];
-    });
+        source_message_id_hash: await hashMessageId(evidence.id),
+      }))()];
+    }));
     if (rows.length) {
       const { error } = await context.supabase.from("email_discoveries").upsert(rows, {
         onConflict: "user_id,source_provider,source_message_id_hash,benefit_name",

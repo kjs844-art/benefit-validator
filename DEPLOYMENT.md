@@ -75,7 +75,7 @@ benefits (id, user_id, service_id → services.id ON DELETE CASCADE,
           monthly_cap, extra_limit_note,
           reset_rule, reset_anchor,
           observed_at, observed_precision('minute'|'day'), observed_timezone,
-          source_kind('manual'|'ai_text'|'ai_image'|'import'), source_note,
+          source_kind('manual'|'ai_text'|'ai_image'|'email'|'import'|'mcp'), source_note,
           created_at, updated_at)
 
 ai_usage (user_id, usage_date, call_count)   -- 서버 전용 호출 한도 기록
