@@ -42,7 +42,7 @@ function Dashboard() {
     <AppShell email={user?.email}>
       <h1 className="text-2xl font-bold">대시보드</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        같은 단위끼리만 합산하며, 값을 모르는 항목은 합계에서 제외됩니다.
+        확인된 혜택을 있는 그대로 모았습니다.
       </p>
 
       {loading ? (
