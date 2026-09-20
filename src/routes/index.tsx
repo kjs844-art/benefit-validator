@@ -19,6 +19,13 @@ export const Route = createFileRoute("/")({
         content:
           "계정에 남은 가입 흔적을 바탕으로 서비스, 무료체험, 크레딧, 쿠폰과 만료 정보를 찾아 정리합니다.",
       },
+      { property: "og:title", content: "KeyAtlas — 잊고 있던 가입 서비스와 혜택을 한눈에" },
+      {
+        property: "og:description",
+        content: "메일에서 확인된 가입 서비스, 무료 체험, 크레딧, 쿠폰과 만료 정보를 찾아 정리합니다.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Landing,
