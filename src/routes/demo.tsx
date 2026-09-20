@@ -55,7 +55,7 @@ function DemoPage() {
     <div className="min-h-screen">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-          <Link to="/" className="text-base font-semibold">
+          <Link to="/" className="font-display text-lg font-bold">
             남은혜택
           </Link>
           <div className="flex gap-2">
@@ -84,14 +84,14 @@ function DemoPage() {
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {Object.entries(totals).map(([unit, total]) => (
-              <div key={unit} className="surface-panel p-4">
+              <div key={unit} className="surface-panel surface-panel-hover p-4">
                 <p className="text-xs text-muted-foreground">단위 {unit} 합계 (아는 값만)</p>
-                <p className="mt-1 text-2xl font-semibold text-primary">{formatAmount(total, unit)}</p>
+                <p className="tnum mt-1 text-2xl font-bold text-primary">{formatAmount(total, unit)}</p>
               </div>
             ))}
-            <div className="surface-panel p-4">
+            <div className="surface-panel surface-panel-hover p-4">
               <p className="text-xs text-muted-foreground">다시 확인이 필요한 항목</p>
-              <p className="mt-1 text-2xl font-semibold text-unknown">{stale.length}건</p>
+              <p className="tnum mt-1 text-2xl font-bold text-unknown">{stale.length}건</p>
             </div>
           </div>
         </section>
