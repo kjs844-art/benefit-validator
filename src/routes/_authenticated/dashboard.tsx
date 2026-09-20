@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { BenefitCard } from "@/components/BenefitCard";
 import { useBenefits, useServices } from "@/lib/data";
