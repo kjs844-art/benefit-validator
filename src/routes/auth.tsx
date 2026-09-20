@@ -141,15 +141,6 @@ function AuthPage() {
             >
               Google로 계속하기
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              disabled={busy}
-              onClick={() => socialSignIn("microsoft")}
-            >
-              Microsoft로 계속하기
-            </Button>
           </div>
           <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
             <span className="h-px flex-1 bg-border" />
