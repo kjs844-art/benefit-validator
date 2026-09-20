@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { BenefitCard } from "@/components/BenefitCard";
 import { useBenefits, useServices } from "@/lib/data";
@@ -13,6 +13,9 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  beforeLoad: () => {
+    throw redirect({ to: "/gmail" });
+  },
   head: () => ({
     meta: [
       { title: "대시보드 · 남은혜택" },

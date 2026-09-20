@@ -1,14 +1,11 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { CalendarClock, LayoutDashboard, LogOut, Mail, ScanText, Settings, Wallet } from "lucide-react";
+import { CalendarClock, LogOut, Mail, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Wordmark } from "@/components/brand";
 
 const NAV = [
-  { to: "/dashboard", label: "대시보드", icon: LayoutDashboard },
-  { to: "/services", label: "서비스·혜택", icon: Wallet },
-  { to: "/analyze", label: "AI 분석", icon: ScanText },
-  { to: "/gmail", label: "Gmail", icon: Mail },
+  { to: "/gmail", label: "찾은 혜택", icon: Mail },
   { to: "/schedule", label: "일정", icon: CalendarClock },
   { to: "/settings", label: "설정", icon: Settings },
 ] as const;
@@ -30,7 +27,7 @@ export function AppShell({
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[15rem_minmax(0,1fr)]">
       <aside className="sticky top-0 hidden h-screen flex-col border-r border-border bg-sidebar px-4 py-6 lg:flex">
-        <Link to="/dashboard" className="px-2"><Wordmark /></Link>
+        <Link to="/gmail" className="px-2"><Wordmark /></Link>
         <nav className="mt-9 flex flex-col gap-1">
           {NAV.map((item) => (
             <Link key={item.to} to={item.to} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm" activeProps={{ className: "bg-primary/10 font-medium text-primary" }} inactiveProps={{ className: "text-muted-foreground hover:bg-accent hover:text-foreground" }}>
@@ -45,7 +42,7 @@ export function AppShell({
       </aside>
       <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur lg:hidden">
-          <div className="flex items-center justify-between px-4 py-3"><Link to="/dashboard"><Wordmark /></Link><button type="button" onClick={signOut} className="rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent">로그아웃</button></div>
+          <div className="flex items-center justify-between px-4 py-3"><Link to="/gmail"><Wordmark /></Link><button type="button" onClick={signOut} className="rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent">로그아웃</button></div>
           <nav className="flex gap-1 overflow-x-auto px-3 pb-2 [scrollbar-width:none]">
             {NAV.map((item) => (
               <Link key={item.to} to={item.to} className="shrink-0 rounded-md px-2.5 py-1.5 text-sm" activeProps={{ className: "bg-primary/10 font-medium text-primary" }} inactiveProps={{ className: "text-muted-foreground" }}>{item.label}</Link>

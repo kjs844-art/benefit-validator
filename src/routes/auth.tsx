@@ -45,7 +45,7 @@ function AuthPage() {
     if (next) {
       router.history.push(next);
     } else {
-      router.navigate({ to: "/dashboard" });
+      router.navigate({ to: "/gmail" });
     }
   }
 
