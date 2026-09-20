@@ -12,7 +12,7 @@ export const Route = createFileRoute("/demo")({
       { title: "데모 체험 · 남은혜택" },
       {
         name: "description",
-        content: "로그인 없이 남은혜택의 대시보드와 혜택 기록 방식을 둘러볼 수 있는 데모입니다.",
+        content: "로그인 없이 샘플 혜택 화면을 둘러볼 수 있는 데모입니다.",
       },
       { property: "og:title", content: "데모 체험 · 남은혜택" },
       { property: "og:description", content: "로그인 없이 남은혜택 화면을 둘러보세요." },
@@ -80,7 +80,7 @@ function DemoPage() {
         <section>
            <h1 className="text-2xl font-bold">데모 대시보드</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            같은 단위끼리만 합산합니다. 값을 모르는 항목은 합계에서 제외되고 &quot;모름&quot;으로 표시됩니다.
+            샘플 데이터로 실제 화면을 그대로 보여드립니다.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {Object.entries(totals).map(([unit, total]) => (
@@ -100,7 +100,7 @@ function DemoPage() {
           <div>
             <h2 className="text-lg font-semibold">메일에서 확인된 가입 서비스</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              디자인 스튜디오는 샘플 메일 분석 결과입니다. 실제 Gmail 연결이나 메일 원문은 사용하지 않습니다.
+              디자인 스튜디오는 샘플 메일 분석 결과입니다.
             </p>
           </div>
           {data.services.map((service) => {
@@ -133,8 +133,7 @@ function DemoPage() {
         </section>
 
         <p className="pb-10 text-xs text-muted-foreground">
-          데모 데이터는 예시이며 실제 서비스 계정과 연결되어 있지 않습니다. 남은혜택은 외부 계정에서
-          잔량을 자동으로 가져오지 않습니다.
+          데모 데이터는 예시이며 실제 서비스 계정과 연결되어 있지 않습니다.
         </p>
       </main>
     </div>
