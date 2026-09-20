@@ -7,4 +7,6 @@
 - [x] Google OAuth 설정값·Redirect URL·환경변수 문서화
 - [x] Microsoft 메일 연결은 제출판에서 제외
 - [x] 네이버·카카오 메일은 파일·캡처 가져오기로 지원하고 직접 연동은 보류
-- [ ] 디자인 개선은 제출 기능 완료 후로 보류
+- [ ] 디자인 개선(텍스트 과다·PPT 느낌 정리 포함)은 제출 기능 완료 후로 보류
+- [ ] Google 서비스 연결 (Calendar/Drive/Sheets/Docs 등)
+- [x] X(Twitter) 연결 — 사용자 요청으로 건너뜀
