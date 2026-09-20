@@ -2,6 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import {
   CalendarClock,
+  FileSearch,
   LayoutDashboard,
   LogOut,
   Mail,
@@ -11,10 +12,12 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Wordmark } from "@/components/brand";
+import { useKeyAtlasWebMCP } from "@/lib/webmcp/useKeyAtlasWebMCP";
 
 const NAV = [
   { to: "/gmail", label: "Overview", korean: "대시보드", icon: LayoutDashboard },
   { to: "/services", label: "Services", korean: "내 서비스", icon: Sparkles },
+  { to: "/analyze", label: "Analyze", korean: "자료 분석", icon: FileSearch },
   { to: "/schedule", label: "Timeline", korean: "일정", icon: CalendarClock },
   { to: "/settings", label: "Settings", korean: "설정", icon: Settings },
 ] as const;
@@ -27,6 +30,7 @@ export function AppShell({
   email?: string | null | undefined;
 }) {
   const router = useRouter();
+  const webMcp = useKeyAtlasWebMCP();
   async function signOut() {
     await supabase.auth.signOut();
     router.navigate({ to: "/auth", search: { next: undefined } });
@@ -75,6 +79,19 @@ export function AppShell({
           >
             <Plus className="size-3" /> 다시 분석하기
           </Link>
+        </div>
+        <div className="mt-3 flex items-center justify-between px-2 text-[10px] text-sidebar-foreground/40">
+          <span>WebMCP</span>
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              className={`size-1.5 rounded-full ${webMcp.status === "registered" ? "bg-sidebar-primary" : "bg-sidebar-foreground/25"}`}
+            />
+            {webMcp.status === "registered"
+              ? `${webMcp.toolCount} tools ready`
+              : webMcp.status === "unsupported"
+                ? "browser preview"
+                : "checking"}
+          </span>
         </div>
         <div className="mt-4 border-t border-sidebar-border pt-4">
           {email ? (

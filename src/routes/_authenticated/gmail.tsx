@@ -40,7 +40,7 @@ const CATEGORY_LABELS = {
 export const Route = createFileRoute("/_authenticated/gmail")({
   head: () => ({
     meta: [
-      { title: "Overview · 남은혜택." },
+      { title: "Overview · KeyAtlas." },
       { name: "description", content: "Gmail에서 확인된 가입 서비스와 혜택을 검토합니다." },
     ],
   }),
@@ -148,11 +148,11 @@ function GmailPage() {
     <AppShell email={user?.email}>
       <div className="rise flex flex-wrap items-end justify-between gap-5">
         <div>
-          <p className="text-sm font-semibold text-primary">Benefit inbox</p>
-          <h1 className="mt-2 text-4xl font-bold sm:text-5xl">혜택을 찾았어요.</h1>
+          <p className="text-sm font-semibold text-primary">Your account atlas</p>
+          <h1 className="mt-2 text-4xl font-bold sm:text-5xl">잊고 있던 서비스를 다시 찾으세요.</h1>
           <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
-            메일에서 확인된 사실만 모아두었습니다. 잔량이 없는 정보는 추측하지 않고 확인 필요로
-            표시해요.
+            가입과 환영, 체험, 크레딧, 쿠폰, 결제 메일에서 확인된 흔적을 모았습니다. 현재 잔량이
+            명시되지 않은 정보는 추측하지 않고 확인 필요로 표시합니다.
           </p>
         </div>
         {connected ? (
@@ -172,13 +172,14 @@ function GmailPage() {
           <div>
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-sidebar-primary">
               <span className="size-2 rounded-full bg-sidebar-primary" />
-              Google connection
+              Evidence connection
             </div>
             <h2 className="mt-4 text-2xl font-bold text-sidebar-foreground">
-              Gmail에서 내 혜택 찾기
+              계정 메일에서 가입 흔적 찾기
             </h2>
             <p className="mt-2 max-w-lg text-sm leading-7 text-sidebar-foreground/60">
-              읽기 전용으로 최근 혜택 관련 메일을 분석합니다. 메일을 보내거나 수정하지 않습니다.
+              Google 로그인과 별도로 Gmail 읽기 권한을 승인하면 최근 가입·혜택 관련 메일을
+              분석합니다. 메일을 보내거나 수정하지 않습니다.
             </p>
             <div className="mt-5 flex flex-wrap gap-3 text-xs text-sidebar-foreground/55">
               <span>
@@ -224,9 +225,9 @@ function GmailPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
-              Found in your mail
+              Discovered account traces
             </p>
-            <h2 className="mt-2 text-2xl font-bold">메일에서 확인된 서비스</h2>
+            <h2 className="mt-2 text-2xl font-bold">메일 근거로 찾은 서비스와 혜택</h2>
           </div>
           {(discoveries.data?.length ?? 0) > 0 ? (
             <Button
@@ -249,7 +250,7 @@ function GmailPage() {
             </div>
             <h3 className="mt-4 text-lg font-bold">아직 발견된 혜택이 없어요.</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Google 계정을 연결하고 첫 번째 분석을 시작해보세요.
+              Gmail 읽기 전용 연결을 승인하고 첫 번째 조회를 시작해보세요.
             </p>
           </div>
         ) : null}

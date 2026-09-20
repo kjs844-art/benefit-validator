@@ -1,6 +1,6 @@
 # 배포 및 외부 이전 가이드
 
-이 문서는 남은혜택을 Lovable 밖으로 옮길 때 필요한 작업을 정리합니다.
+이 문서는 KeyAtlas를 Lovable 밖으로 옮길 때 필요한 작업을 정리합니다.
 
 > **중요:** 앱 설정 화면의 "내 데이터 내보내기"는 **사용자 한 명의 서비스·혜택 데이터**만
 > JSON 으로 내보내는 기능입니다. 소스 코드, 데이터베이스 전체, 로그인 시스템, 서버 비밀키는
@@ -44,16 +44,16 @@ PostgreSQL (Lovable Cloud / Supabase) + Auth
 > **일반 PostgreSQL 서버만 준비한다고 해서 인증·파일 저장·서버 함수가 자동으로 대체되지 않습니다.**
 > PostgreSQL 은 표(테이블) 저장만 담당합니다. 아래 항목은 각각 따로 준비해야 합니다.
 
-| 구성 요소 | 현재 | 옮길 때 필요한 작업 |
-| --- | --- | --- |
-| 데이터베이스 | Lovable Cloud(Supabase) PostgreSQL | 새 PostgreSQL 에 `drizzle/migrations/` 적용 |
-| 행 단위 보안(RLS) | `auth.uid()` 기반 정책 | 새 환경에도 동일 정책 필요. `auth.uid()` 가 없으면 서버에서 소유권 검사 코드로 대체 |
-| 회원 인증 | Supabase Auth (`auth.users`) | Supabase 자체 호스팅, 또는 다른 인증 제공자로 교체 + 클라이언트 코드 수정 |
-| 세션·토큰 검증 | `src/integrations/supabase/auth-middleware.ts` | 새 인증 제공자의 토큰 검증으로 교체 |
-| 서버 함수 | TanStack `createServerFn` (Worker) | Node/Worker 런타임이 있는 호스팅 필요 |
-| 파일 저장 | 사용하지 않음 (이미지는 저장하지 않고 분석 후 폐기) | 추가 작업 없음 |
-| AI 호출 | Lovable AI Gateway | 다른 제공자로 교체 (아래 6번) |
-| Gmail 연결 | Lovable App User Connector | 사용자별 OAuth, 키 암호화 저장, Gmail API 프록시를 별도로 구현 |
+| 구성 요소         | 현재                                                | 옮길 때 필요한 작업                                                                 |
+| ----------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 데이터베이스      | Lovable Cloud(Supabase) PostgreSQL                  | 새 PostgreSQL 에 `drizzle/migrations/` 적용                                         |
+| 행 단위 보안(RLS) | `auth.uid()` 기반 정책                              | 새 환경에도 동일 정책 필요. `auth.uid()` 가 없으면 서버에서 소유권 검사 코드로 대체 |
+| 회원 인증         | Supabase Auth (`auth.users`)                        | Supabase 자체 호스팅, 또는 다른 인증 제공자로 교체 + 클라이언트 코드 수정           |
+| 세션·토큰 검증    | `src/integrations/supabase/auth-middleware.ts`      | 새 인증 제공자의 토큰 검증으로 교체                                                 |
+| 서버 함수         | TanStack `createServerFn` (Worker)                  | Node/Worker 런타임이 있는 호스팅 필요                                               |
+| 파일 저장         | 사용하지 않음 (이미지는 저장하지 않고 분석 후 폐기) | 추가 작업 없음                                                                      |
+| AI 호출           | Lovable AI Gateway                                  | 다른 제공자로 교체 (아래 6번)                                                       |
+| Gmail 연결        | Lovable App User Connector                          | 사용자별 OAuth, 키 암호화 저장, Gmail API 프록시를 별도로 구현                      |
 
 ### 데이터 이전
 

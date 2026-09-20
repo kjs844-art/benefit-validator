@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   },
   head: () => ({
     meta: [
-      { title: "대시보드 · 남은혜택." },
+      { title: "대시보드 · KeyAtlas." },
       { name: "description", content: "내 혜택의 중요한 순간을 한눈에 확인합니다." },
     ],
   }),

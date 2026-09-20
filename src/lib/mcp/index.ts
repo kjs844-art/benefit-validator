@@ -11,11 +11,11 @@ import deleteBenefit from "./tools/delete_benefit";
 const projectRef = import.meta.env["VITE_SUPABASE_PROJECT_ID"] ?? "project-ref-unset";
 
 export default defineMcp({
-  name: "benefit-validator",
-  title: "Benefit Validator",
+  name: "keyatlas",
+  title: "KeyAtlas",
   version: "0.1.0",
   instructions:
-    "Tools for Benefit Validator (남은혜택), an app that records remaining subscription benefits. Tools act as the signed-in user and only touch that user's own data. Amounts follow a strict accuracy rule: null means 'unknown' and 0 means an actual zero — never invent or merge values, keep units exactly as recorded, and preserve the time each value was observed (observed_at / observed_precision).",
+    "Tools for KeyAtlas, a personal account atlas for rediscovering joined services, trials, credits, coupons, and expiry dates. Tools act as the signed-in user and only touch that user's own data. Amounts follow a strict accuracy rule: null means 'unknown' and 0 means an actual zero — never invent or merge values, keep units exactly as recorded, and preserve the time each value was observed (observed_at / observed_precision).",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",

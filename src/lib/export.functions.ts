@@ -11,7 +11,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export const EXPORT_FORMAT_VERSION = "namun-hyetaek.export.v2";
+export const EXPORT_FORMAT_VERSION = "keyatlas.export.v3";
 
 export const exportMyData = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -47,13 +47,15 @@ export const exportMyData = createServerFn({ method: "GET" })
         .order("evidence_date", { ascending: true }),
     ]);
 
-    if (sErr || bErr || eErr) throw new Error("데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    if (sErr || bErr || eErr)
+      throw new Error("데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
 
     return {
       format: EXPORT_FORMAT_VERSION,
       dataset: "user" as const,
       exported_at: new Date().toISOString(),
-      scope: "본인 계정의 서비스·혜택 데이터만 포함합니다. 비밀번호·토큰·서버 비밀키는 포함되지 않습니다.",
+      scope:
+        "본인 계정의 서비스·혜택 데이터만 포함합니다. 비밀번호·토큰·서버 비밀키는 포함되지 않습니다.",
       counts: {
         services: services?.length ?? 0,
         benefits: benefits?.length ?? 0,

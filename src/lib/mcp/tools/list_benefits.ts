@@ -44,7 +44,7 @@ export default defineTool({
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_args, ctx) => {
     if (!ctx.isAuthenticated()) {
-      throw new ToolError("Sign in as a Benefit Validator user to read your data.");
+      throw new ToolError("Sign in as a KeyAtlas user to read your data.");
     }
     const supabase = supabaseForUser(ctx);
     const [servicesRes, benefitsRes] = await Promise.all([

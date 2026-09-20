@@ -78,10 +78,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "남은혜택" },
-      { name: "description", content: "구독 서비스의 남은 혜택을 기록하고 확인하는 도구." },
-      { property: "og:title", content: "남은혜택" },
-      { property: "og:description", content: "구독 혜택 잔량과 확인 시점을 함께 기록합니다." },
+      { title: "KeyAtlas" },
+      {
+        name: "description",
+        content:
+          "잊고 있던 가입 서비스, 체험판, 크레딧, 쿠폰과 만료 정보를 다시 찾는 개인 계정 지도.",
+      },
+      { property: "og:title", content: "KeyAtlas" },
+      { property: "og:description", content: "가입 흔적과 남은 혜택을 근거와 함께 정리합니다." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

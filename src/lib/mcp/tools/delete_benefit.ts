@@ -9,10 +9,15 @@ export default defineTool({
   inputSchema: {
     id: z.string().min(1).describe("Benefit id from list_benefits."),
   },
-  annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+  annotations: {
+    readOnlyHint: false,
+    destructiveHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   handler: async (input, ctx) => {
     if (!ctx.isAuthenticated()) {
-      throw new ToolError("Sign in as a Benefit Validator user to delete data.");
+      throw new ToolError("Sign in as a KeyAtlas user to delete data.");
     }
     const supabase = supabaseForUser(ctx);
     const { data, error } = await supabase

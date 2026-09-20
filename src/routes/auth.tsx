@@ -19,8 +19,8 @@ export const Route = createFileRoute("/auth")({
   },
   head: () => ({
     meta: [
-      { title: "로그인 · 남은혜택." },
-      { name: "description", content: "Google 계정으로 남은혜택을 시작하세요." },
+      { title: "로그인 · KeyAtlas." },
+      { name: "description", content: "Google 계정으로 KeyAtlas를 시작하세요." },
     ],
   }),
   component: AuthPage,
@@ -111,17 +111,17 @@ function AuthPage() {
         </Link>
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-sidebar-primary">
-            Your benefits, verified
+            Your digital account atlas
           </p>
           <h1 className="mt-5 max-w-md text-5xl font-bold leading-[1.05]">
-            잊고 있던 혜택을
+            가입하고 잊었던 서비스를
             <br />
-            다시 만나는 곳.
+            다시 찾는 곳.
           </h1>
           <div className="mt-9 space-y-4 text-sm text-sidebar-foreground/65">
             <p>
               <Check className="mr-2 inline size-4 text-sidebar-primary" />
-              무료체험 종료일을 놓치지 않게
+              가입·환영 메일에서 서비스 흔적 찾기
             </p>
             <p>
               <Check className="mr-2 inline size-4 text-sidebar-primary" />
@@ -129,11 +129,13 @@ function AuthPage() {
             </p>
             <p>
               <Check className="mr-2 inline size-4 text-sidebar-primary" />
-              메일 근거와 함께 정확하게
+              확인된 메일 근거와 날짜를 함께
             </p>
           </div>
         </div>
-        <p className="text-xs text-sidebar-foreground/40">Gmail은 읽기 전용으로 연결됩니다.</p>
+        <p className="text-xs text-sidebar-foreground/40">
+          Google 로그인과 Gmail 조회 권한은 별도로 승인됩니다.
+        </p>
       </div>
       <div className="flex items-center justify-center px-5 py-10 sm:px-8">
         <div className="w-full max-w-md">
@@ -152,7 +154,7 @@ function AuthPage() {
               {mode === "signin" ? "Welcome back" : "Get started"}
             </p>
             <h2 className="mt-2 text-4xl font-bold">
-              {mode === "signin" ? "다시 만나서 반가워요." : "내 혜택을 정리해볼까요?"}
+              {mode === "signin" ? "내 Atlas로 돌아가기" : "내 계정 지도를 만들어볼까요?"}
             </h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Google 계정으로 시작하면 가장 빠릅니다.

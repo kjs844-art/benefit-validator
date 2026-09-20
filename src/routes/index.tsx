@@ -13,10 +13,11 @@ import { Wordmark } from "@/components/brand";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "남은혜택. — 놓치기 전에 확인하세요" },
+      { title: "KeyAtlas — 잊고 있던 가입 서비스와 혜택을 한눈에" },
       {
         name: "description",
-        content: "Gmail에서 무료체험, 크레딧, 쿠폰, 결제 예정 정보를 찾아 한눈에 확인하세요.",
+        content:
+          "계정에 남은 가입 흔적을 바탕으로 서비스, 무료체험, 크레딧, 쿠폰과 만료 정보를 찾아 정리합니다.",
       },
     ],
   }),
@@ -56,17 +57,16 @@ function Landing() {
           <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-16 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12 lg:pb-28 lg:pt-24">
             <div className="relative z-10">
               <div className="rise inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-accent-foreground">
-                <span className="size-1.5 rounded-full bg-primary" />내 혜택을 검증하는 가장 쉬운
-                방법
+                <span className="size-1.5 rounded-full bg-primary" />내 디지털 계정을 다시 찾는 지도
               </div>
               <h1 className="rise-1 mt-6 max-w-xl text-5xl font-bold leading-[1.04] sm:text-7xl">
-                무료인 줄 알았던 것들,
+                가입하고 잊었던 서비스,
                 <br />
-                <span className="text-primary">이제 놓치지 마세요.</span>
+                <span className="text-primary">KeyAtlas가 다시 찾아드려요.</span>
               </h1>
               <p className="rise-2 mt-7 max-w-lg text-base leading-8 text-muted-foreground sm:text-lg">
-                Gmail에서 무료체험, 크레딧, 쿠폰, 결제 예정 메일을 찾아서 당신이 확인해야 할 순간만
-                알려드립니다.
+                가입·환영·무료체험·크레딧·쿠폰·결제 메일의 흔적을 읽기 전용으로 분석해, 아직 확인할
+                가치가 있는 서비스와 혜택을 한눈에 정리합니다.
               </p>
               <div className="rise-3 mt-9 flex flex-wrap items-center gap-3">
                 <Link
@@ -74,7 +74,7 @@ function Landing() {
                   search={{ next: undefined }}
                   className="rounded-2xl bg-foreground px-5 py-3.5 text-sm font-bold text-background shadow-xl shadow-foreground/10 hover:-translate-y-1"
                 >
-                  Google로 무료 시작하기 <ArrowUpRight className="ml-1 inline size-4" />
+                  Google로 KeyAtlas 시작하기 <ArrowUpRight className="ml-1 inline size-4" />
                 </Link>
                 <Link
                   to="/demo"
@@ -90,7 +90,7 @@ function Landing() {
                 </span>
                 <span>
                   <Check className="mr-1 inline size-3 text-primary" />
-                  메일 원문 저장 안 함
+                  확인한 근거만 저장
                 </span>
               </div>
             </div>
@@ -162,34 +162,35 @@ function Landing() {
                 Simple by design
               </p>
               <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-                복잡한 구독 관리를
-                <br />한 화면으로.
+                흩어진 가입 흔적을
+                <br />
+                하나의 지도로.
               </h2>
               <p className="mt-5 max-w-sm text-sm leading-7 text-muted-foreground">
-                우리는 추측하지 않습니다. 메일에서 확인된 사실과 확인이 필요한 빈 곳을 구분해
-                보여드립니다.
+                Google 로그인은 본인 확인에 사용하고, 사용자가 따로 승인한 메일에서 가입과 혜택의
+                흔적을 찾습니다. 확인되지 않은 값은 추측하지 않습니다.
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="surface-panel p-5">
                 <span className="tnum text-4xl font-bold text-primary">01</span>
-                <h3 className="mt-12 font-bold">Google로 시작</h3>
+                <h3 className="mt-12 font-bold">Google로 내 지도 만들기</h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  계정을 만들고 내 대시보드를 준비합니다.
+                  내 KeyAtlas 계정을 만들고 개인 대시보드를 준비합니다.
                 </p>
               </div>
               <div className="surface-panel p-5">
                 <span className="tnum text-4xl font-bold text-primary">02</span>
-                <h3 className="mt-12 font-bold">Gmail 읽기 전용 연결</h3>
+                <h3 className="mt-12 font-bold">가입 흔적 찾기</h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  혜택 관련 메일만 필요한 순간에 분석합니다.
+                  사용자가 승인하면 메일 속 가입·체험·크레딧 흔적을 찾습니다.
                 </p>
               </div>
               <div className="surface-panel p-5">
                 <span className="tnum text-4xl font-bold text-primary">03</span>
-                <h3 className="mt-12 font-bold">놓치기 전에 확인</h3>
+                <h3 className="mt-12 font-bold">기억 대신 KeyAtlas</h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  종료·결제·잔량 상태를 우선순위로 보여줍니다.
+                  남은 기간·크레딧·쿠폰·확인 필요 항목을 순서대로 보여줍니다.
                 </p>
               </div>
             </div>
@@ -229,7 +230,7 @@ function Landing() {
       </main>
       <footer className="mx-auto flex max-w-7xl items-center justify-between px-5 py-8 text-xs text-muted-foreground sm:px-8 lg:px-12">
         <Wordmark className="scale-90 origin-left" />
-        <span>© 2026 남은혜택. 개인 혜택을 잊지 않도록.</span>
+        <span>© 2026 KeyAtlas. 개인 혜택을 잊지 않도록.</span>
       </footer>
     </div>
   );

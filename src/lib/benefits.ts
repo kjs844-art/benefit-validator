@@ -1,5 +1,5 @@
 /**
- * Shared, browser-safe domain logic for 남은혜택.
+ * Shared, browser-safe domain logic for KeyAtlas.
  *
  * Accuracy rules encoded here (see README "정확성 규칙"):
  * - `null` means UNKNOWN, `0` means measured zero. Never coalesce one to the other.
@@ -10,25 +10,13 @@
  *   observation as possibly outdated ("리셋 시각 경과").
  */
 
-export type ResetRule =
-  | "none"
-  | "daily"
-  | "weekly"
-  | "monthly"
-  | "yearly"
-  | "custom"
-  | "unknown";
+export type ResetRule = "none" | "daily" | "weekly" | "monthly" | "yearly" | "custom" | "unknown";
 
 export type SourceKind = "manual" | "ai_text" | "ai_image" | "email" | "import" | "mcp";
 export type ObservedPrecision = "minute" | "day";
 
 export type SubscriptionStatus =
-  | "active"
-  | "trial"
-  | "trial_ended"
-  | "paused"
-  | "cancelled"
-  | "unknown";
+  "active" | "trial" | "trial_ended" | "paused" | "cancelled" | "unknown";
 
 export interface BenefitRecord {
   id: string;
@@ -100,9 +88,9 @@ export function isUnknown(value: number | null): boolean {
 }
 
 /** Percentage of remaining vs granted — only when BOTH are known and granted > 0. */
-export function remainingRatio(b: Pick<BenefitRecord, "granted_amount" | "remaining_amount">):
-  | number
-  | null {
+export function remainingRatio(
+  b: Pick<BenefitRecord, "granted_amount" | "remaining_amount">,
+): number | null {
   if (isUnknown(b.granted_amount) || isUnknown(b.remaining_amount)) return null;
   const granted = b.granted_amount as number;
   if (granted <= 0) return null;
@@ -121,7 +109,9 @@ export function sumByUnit(benefits: BenefitRecord[]): Record<string, number> {
 }
 
 /** Observed timestamp formatted at its recorded precision — no fake clock time. */
-export function formatObservedAt(b: Pick<BenefitRecord, "observed_at" | "observed_precision" | "observed_timezone">): string {
+export function formatObservedAt(
+  b: Pick<BenefitRecord, "observed_at" | "observed_precision" | "observed_timezone">,
+): string {
   const d = new Date(b.observed_at);
   if (Number.isNaN(d.getTime())) return "확인 시점 모름";
   const opts: Intl.DateTimeFormatOptions =
@@ -136,11 +126,16 @@ export function formatObservedAt(b: Pick<BenefitRecord, "observed_at" | "observe
           timeZone: b.observed_timezone,
         };
   const text = new Intl.DateTimeFormat("ko-KR", opts).format(d);
-  return b.observed_precision === "day" ? `${text} (날짜만 기록됨)` : `${text} (${b.observed_timezone})`;
+  return b.observed_precision === "day"
+    ? `${text} (날짜만 기록됨)`
+    : `${text} (${b.observed_timezone})`;
 }
 
 /** Next reset instant, computed from the anchor. Returns null when unknown. */
-export function nextResetAt(b: Pick<BenefitRecord, "reset_rule" | "reset_anchor">, from: Date = new Date()): Date | null {
+export function nextResetAt(
+  b: Pick<BenefitRecord, "reset_rule" | "reset_anchor">,
+  from: Date = new Date(),
+): Date | null {
   if (b.reset_rule === "none" || b.reset_rule === "unknown") return null;
   if (!b.reset_anchor) return null;
   const anchor = new Date(b.reset_anchor);

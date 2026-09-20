@@ -12,13 +12,21 @@ export default defineTool({
     "Update fields of one of the user's recorded benefits (e.g. a new remaining amount after re-checking). Only the fields you pass are changed.",
   inputSchema: {
     id: z.string().min(1).describe("Benefit id from list_benefits."),
-    remaining_amount: z.number().nullish().describe("New remaining amount; null records 'unknown'."),
+    remaining_amount: z
+      .number()
+      .nullish()
+      .describe("New remaining amount; null records 'unknown'."),
     granted_amount: z.number().nullish(),
     monthly_cap: z.number().nullish(),
     extra_limit_note: z.string().max(500).nullish(),
-    reset_rule: z.enum(["none", "daily", "weekly", "monthly", "yearly", "custom", "unknown"]).nullish(),
+    reset_rule: z
+      .enum(["none", "daily", "weekly", "monthly", "yearly", "custom", "unknown"])
+      .nullish(),
     reset_anchor: z.string().max(80).nullish(),
-    observed_at: z.string().min(1).describe("ISO 8601 timestamp of the new observation; set alongside a new value."),
+    observed_at: z
+      .string()
+      .min(1)
+      .describe("ISO 8601 timestamp of the new observation; set alongside a new value."),
     observed_precision: z.enum(["minute", "day"]).nullish(),
     observed_timezone: z.string().nullish(),
     source_note: z.string().max(2000).nullish(),
@@ -26,7 +34,7 @@ export default defineTool({
   annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
   handler: async (input, ctx) => {
     if (!ctx.isAuthenticated()) {
-      throw new ToolError("Sign in as a Benefit Validator user to update data.");
+      throw new ToolError("Sign in as a KeyAtlas user to update data.");
     }
     const patch: BenefitUpdate = {};
     if (input.remaining_amount !== undefined) patch.remaining_amount = input.remaining_amount;

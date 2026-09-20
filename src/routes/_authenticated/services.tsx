@@ -1,5 +1,6 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Archive, CirclePlus, Pencil, Sparkles, Trash2 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { BenefitCard } from "@/components/BenefitCard";
 import { BenefitForm, emptyBenefitDraft, type BenefitDraft } from "@/components/BenefitForm";
@@ -30,17 +31,10 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 export const Route = createFileRoute("/_authenticated/services")({
-  beforeLoad: () => {
-    throw redirect({ to: "/gmail" });
-  },
   head: () => ({
     meta: [
-      { title: "서비스·혜택 · 남은혜택" },
-      { name: "description", content: "구독 서비스 계정을 등록하고 혜택을 직접 입력·수정·삭제합니다." },
-      { property: "og:title", content: "서비스·혜택 · 남은혜택" },
-      { property: "og:description", content: "서비스와 혜택 기록 관리." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { title: "내 서비스 · KeyAtlas" },
+      { name: "description", content: "찾았거나 직접 기록한 서비스와 남은 혜택을 관리합니다." },
     ],
   }),
   component: ServicesPage,
@@ -75,14 +69,14 @@ function ServiceForm({
   busy?: boolean;
 }) {
   const [draft, setDraft] = useState<ServiceDraft>(initial);
-  function set<K extends keyof ServiceDraft>(k: K, v: ServiceDraft[K]) {
-    setDraft((p) => ({ ...p, [k]: v }));
+  function set<K extends keyof ServiceDraft>(key: K, value: ServiceDraft[K]) {
+    setDraft((previous) => ({ ...previous, [key]: value }));
   }
   return (
     <form
-      className="surface-panel space-y-4 p-4"
-      onSubmit={(e) => {
-        e.preventDefault();
+      className="dark-panel mt-6 rounded-[1.75rem] p-6 sm:p-8"
+      onSubmit={(event) => {
+        event.preventDefault();
         const parsed = serviceSchema.safeParse({ name: draft.name });
         if (!parsed.success) {
           toast.error(parsed.error.issues[0]?.message ?? "입력을 확인해 주세요.");
@@ -91,43 +85,70 @@ function ServiceForm({
         onSubmit({ ...draft, name: draft.name.trim() });
       }}
     >
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="space-y-1.5">
-          <Label htmlFor="s-name">서비스 이름</Label>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-sidebar-primary">
+            Service profile
+          </p>
+          <h2 className="mt-2 text-2xl font-bold text-sidebar-foreground">
+            {draft.id ? "서비스 정보 수정" : "새 서비스 추가"}
+          </h2>
+        </div>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="rounded-xl px-3 py-2 text-xs text-sidebar-foreground/55 hover:bg-sidebar-accent"
+        >
+          닫기
+        </button>
+      </div>
+      <div className="mt-7 grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="s-name" className="text-sidebar-foreground/70">
+            서비스 이름
+          </Label>
           <Input
             id="s-name"
             maxLength={120}
             value={draft.name}
-            onChange={(e) => set("name", e.target.value)}
-            placeholder="예: 스트리밍 플러스"
+            onChange={(event) => set("name", event.target.value)}
+            placeholder="예: ChatGPT"
+            className="h-12 border-sidebar-border bg-sidebar-accent text-sidebar-foreground placeholder:text-sidebar-foreground/30"
           />
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="s-plan">요금제 (선택)</Label>
+        <div className="space-y-2">
+          <Label htmlFor="s-plan" className="text-sidebar-foreground/70">
+            요금제
+          </Label>
           <Input
             id="s-plan"
             maxLength={120}
-            defaultValue={draft.plan_name ?? ""}
-            onChange={(e) => set("plan_name", e.target.value.trim() || null)}
+            value={draft.plan_name ?? ""}
+            onChange={(event) => set("plan_name", event.target.value.trim() || null)}
+            placeholder="예: Plus, Pro 체험"
+            className="h-12 border-sidebar-border bg-sidebar-accent text-sidebar-foreground placeholder:text-sidebar-foreground/30"
           />
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="s-account">계정 구분 (선택)</Label>
+        <div className="space-y-2">
+          <Label htmlFor="s-account" className="text-sidebar-foreground/70">
+            계정 구분
+          </Label>
           <Input
             id="s-account"
             maxLength={120}
-            defaultValue={draft.account_label ?? ""}
-            onChange={(e) => set("account_label", e.target.value.trim() || null)}
-            placeholder="예: 본인 계정 / 업무용"
+            value={draft.account_label ?? ""}
+            onChange={(event) => set("account_label", event.target.value.trim() || null)}
+            placeholder="개인 / 업무용"
+            className="h-12 border-sidebar-border bg-sidebar-accent text-sidebar-foreground placeholder:text-sidebar-foreground/30"
           />
         </div>
-        <div className="space-y-1.5">
-          <Label>구독 상태</Label>
+        <div className="space-y-2">
+          <Label className="text-sidebar-foreground/70">현재 상태</Label>
           <Select
             value={draft.subscription_status}
-            onValueChange={(v) => set("subscription_status", v as SubscriptionStatus)}
+            onValueChange={(value) => set("subscription_status", value as SubscriptionStatus)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-12 border-sidebar-border bg-sidebar-accent text-sidebar-foreground">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -139,41 +160,62 @@ function ServiceForm({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="s-trial">무료 체험 종료일 (선택)</Label>
+        <div className="space-y-2">
+          <Label htmlFor="s-trial" className="text-sidebar-foreground/70">
+            체험 종료일
+          </Label>
           <Input
             id="s-trial"
             type="date"
-            defaultValue={draft.trial_ends_at ? draft.trial_ends_at.slice(0, 10) : ""}
-            onChange={(e) =>
-              set("trial_ends_at", e.target.value ? new Date(e.target.value).toISOString() : null)
+            value={draft.trial_ends_at?.slice(0, 10) ?? ""}
+            onChange={(event) =>
+              set(
+                "trial_ends_at",
+                event.target.value ? new Date(event.target.value).toISOString() : null,
+              )
             }
+            className="h-12 border-sidebar-border bg-sidebar-accent text-sidebar-foreground"
           />
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="s-tz">시간대</Label>
+        <div className="space-y-2">
+          <Label htmlFor="s-tz" className="text-sidebar-foreground/70">
+            시간대
+          </Label>
           <Input
             id="s-tz"
             maxLength={64}
             value={draft.timezone}
-            onChange={(e) => set("timezone", e.target.value)}
+            onChange={(event) => set("timezone", event.target.value)}
+            className="h-12 border-sidebar-border bg-sidebar-accent text-sidebar-foreground"
           />
         </div>
       </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="s-notes">메모 (선택)</Label>
+      <div className="mt-5 space-y-2">
+        <Label htmlFor="s-notes" className="text-sidebar-foreground/70">
+          메모
+        </Label>
         <Textarea
           id="s-notes"
           maxLength={500}
-          defaultValue={draft.notes ?? ""}
-          onChange={(e) => set("notes", e.target.value.trim() || null)}
+          value={draft.notes ?? ""}
+          onChange={(event) => set("notes", event.target.value.trim() || null)}
+          className="border-sidebar-border bg-sidebar-accent text-sidebar-foreground placeholder:text-sidebar-foreground/30"
         />
       </div>
-      <div className="flex gap-2">
-        <Button type="submit" disabled={busy}>
-          {busy ? "저장 중…" : "저장"}
+      <div className="mt-6 flex gap-2">
+        <Button
+          type="submit"
+          disabled={busy}
+          className="rounded-xl bg-sidebar-primary text-sidebar-primary-foreground"
+        >
+          {busy ? "저장 중…" : "서비스 저장"}
         </Button>
-        <Button type="button" variant="ghost" onClick={onCancel}>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onCancel}
+          className="rounded-xl text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+        >
           취소
         </Button>
       </div>
@@ -189,162 +231,180 @@ function ServicesPage() {
   const deleteService = useDeleteService();
   const saveBenefit = useSaveBenefit();
   const deleteBenefit = useDeleteBenefit();
-
   const [serviceForm, setServiceForm] = useState<ServiceDraft | null>(null);
   const [benefitForm, setBenefitForm] = useState<BenefitDraft | null>(null);
-
-  function serviceToDraft(s: ServiceRecord): ServiceDraft {
+  function serviceToDraft(service: ServiceRecord): ServiceDraft {
     return {
-      id: s.id,
-      name: s.name,
-      provider: s.provider,
-      plan_name: s.plan_name,
-      account_label: s.account_label,
-      timezone: s.timezone,
-      subscription_status: s.subscription_status,
-      trial_ends_at: s.trial_ends_at,
-      notes: s.notes,
+      id: service.id,
+      name: service.name,
+      provider: service.provider,
+      plan_name: service.plan_name,
+      account_label: service.account_label,
+      timezone: service.timezone,
+      subscription_status: service.subscription_status,
+      trial_ends_at: service.trial_ends_at,
+      notes: service.notes,
     };
   }
-
+  const serviceList = services.data ?? [];
+  const benefitList = benefits.data ?? [];
   return (
     <AppShell email={user?.email}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="rise flex flex-wrap items-end justify-between gap-5">
         <div>
-          <h1 className="text-2xl font-bold">서비스·혜택</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            서비스와 혜택을 직접 등록해 관리합니다.
+          <p className="text-sm font-semibold text-primary">Account atlas</p>
+          <h1 className="mt-2 text-4xl font-bold sm:text-5xl">내 서비스 지도</h1>
+          <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
+            찾은 서비스와 직접 추가한 계정을 한곳에서 관리하세요. 모르는 값은 그대로 모름으로
+            남겨둡니다.
           </p>
         </div>
-        <Button onClick={() => setServiceForm(emptyService())}>서비스 추가</Button>
+        <Button
+          onClick={() => setServiceForm(emptyService())}
+          className="rounded-xl bg-foreground text-background"
+        >
+          <CirclePlus className="mr-2 size-4" />
+          서비스 추가
+        </Button>
       </div>
-
       {serviceForm ? (
-        <div className="mt-4">
-          <ServiceForm
-            initial={serviceForm}
-            busy={saveService.isPending}
-            onCancel={() => setServiceForm(null)}
-            onSubmit={(draft) =>
-              saveService.mutate(draft, {
-                onSuccess: () => {
-                  toast.success("서비스를 저장했습니다.");
-                  setServiceForm(null);
-                },
-                onError: (e) => toast.error(`저장 실패: ${e.message}`),
-              })
-            }
-          />
-        </div>
+        <ServiceForm
+          initial={serviceForm}
+          busy={saveService.isPending}
+          onCancel={() => setServiceForm(null)}
+          onSubmit={(draft) =>
+            saveService.mutate(draft, {
+              onSuccess: () => {
+                toast.success("서비스를 저장했습니다.");
+                setServiceForm(null);
+              },
+              onError: (error) => toast.error(`저장 실패: ${error.message}`),
+            })
+          }
+        />
       ) : null}
-
+      <div className="mt-9 flex items-center gap-3">
+        <div className="grid size-10 place-items-center rounded-xl bg-primary/15 text-primary">
+          <Archive className="size-5" />
+        </div>
+        <div>
+          <h2 className="text-lg font-bold">저장된 서비스</h2>
+          <p className="text-xs text-muted-foreground">
+            총 {serviceList.length}개 서비스 · {benefitList.length}개 혜택
+          </p>
+        </div>
+      </div>
       {services.isLoading ? (
-        <Skeleton className="mt-6 h-40" />
+        <Skeleton className="mt-5 h-48 rounded-2xl" />
       ) : services.error ? (
-        <p className="mt-6 text-sm text-destructive">데이터를 불러오지 못했습니다.</p>
-      ) : (services.data ?? []).length === 0 ? (
-        <p className="mt-6 text-sm text-muted-foreground">등록된 서비스가 없습니다.</p>
+        <p className="mt-6 rounded-2xl bg-destructive/10 p-5 text-sm text-destructive">
+          데이터를 불러오지 못했습니다.
+        </p>
+      ) : serviceList.length === 0 ? (
+        <div className="surface-panel mt-5 p-10 text-center">
+          <Sparkles className="mx-auto size-7 text-primary" />
+          <h3 className="mt-4 text-lg font-bold">아직 저장된 서비스가 없습니다.</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            계정 분석 결과를 저장하거나 직접 서비스를 추가해보세요.
+          </p>
+        </div>
       ) : (
-        <div className="mt-6 space-y-8">
-          {(services.data ?? []).map((service) => {
-            const list = (benefits.data ?? []).filter((b) => b.service_id === service.id);
+        <div className="mt-5 space-y-5">
+          {serviceList.map((service) => {
+            const list = benefitList.filter((benefit) => benefit.service_id === service.id);
             return (
-              <section key={service.id} className="space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <h2 className="text-lg font-semibold">{service.name}</h2>
-                    <p className="text-xs text-muted-foreground">
-                      {service.plan_name ?? "요금제 모름"} ·{" "}
-                      {STATUS_LABELS[service.subscription_status]}
-                      {service.account_label ? ` · ${service.account_label}` : ""}
-                    </p>
+              <section key={service.id} className="surface-panel overflow-hidden">
+                <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border/70 px-5 py-4 sm:px-6">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-foreground text-base font-bold text-background">
+                      {service.name.slice(0, 1)}
+                    </div>
+                    <div className="min-w-0">
+                      <h2 className="truncate text-lg font-bold">{service.name}</h2>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {service.plan_name ?? "요금제 모름"} ·{" "}
+                        {STATUS_LABELS[service.subscription_status]}
+                        {service.account_label ? ` · ${service.account_label}` : ""}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => setBenefitForm(emptyBenefitDraft(service.id, service.timezone))}
+                      onClick={() =>
+                        setBenefitForm(emptyBenefitDraft(service.id, service.timezone))
+                      }
+                      className="rounded-xl"
                     >
-                      혜택 추가
+                      <CirclePlus className="mr-1.5 size-3.5" />
+                      혜택
                     </Button>
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="ghost"
                       onClick={() => setServiceForm(serviceToDraft(service))}
+                      className="rounded-xl"
                     >
-                      서비스 수정
+                      <Pencil className="mr-1.5 size-3.5" />
+                      수정
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => {
-                        if (!confirm(`'${service.name}' 과(와) 그 혜택을 모두 삭제할까요?`)) return;
+                        if (!confirm(`'${service.name}'과 연결된 혜택을 모두 삭제할까요?`)) return;
                         deleteService.mutate(service.id, {
                           onSuccess: () => toast.success("삭제했습니다."),
-                          onError: (e) => toast.error(`삭제 실패: ${e.message}`),
+                          onError: (error) => toast.error(`삭제 실패: ${error.message}`),
                         });
                       }}
+                      className="rounded-xl text-muted-foreground hover:text-destructive"
                     >
-                      삭제
+                      <Trash2 className="size-3.5" />
                     </Button>
                   </div>
-                </div>
-
-                {benefitForm && benefitForm.service_id === service.id ? (
-                  <BenefitForm
-                    initial={benefitForm}
-                    submitting={saveBenefit.isPending}
-                    onCancel={() => setBenefitForm(null)}
-                    onSubmit={(draft) =>
-                      saveBenefit.mutate(draft, {
-                        onSuccess: () => {
-                          toast.success("혜택을 저장했습니다.");
-                          setBenefitForm(null);
-                        },
-                        onError: (e) => toast.error(`저장 실패: ${e.message}`),
-                      })
-                    }
-                  />
-                ) : null}
-
-                {list.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">등록된 혜택이 없습니다.</p>
-                ) : (
-                  <div className="grid gap-3 md:grid-cols-2">
-                    {list.map((b) => (
-                      <BenefitCard
-                        key={b.id}
-                        benefit={b}
-                        onEdit={() =>
-                          setBenefitForm({
-                            id: b.id,
-                            service_id: b.service_id,
-                            name: b.name,
-                            unit: b.unit,
-                            granted_amount: b.granted_amount,
-                            remaining_amount: b.remaining_amount,
-                            monthly_cap: b.monthly_cap,
-                            extra_limit_note: b.extra_limit_note,
-                            reset_rule: b.reset_rule,
-                            reset_anchor: b.reset_anchor,
-                            observed_at: b.observed_at,
-                            observed_precision: b.observed_precision,
-                            observed_timezone: b.observed_timezone,
-                            source_kind: b.source_kind,
-                            source_note: b.source_note,
+                </header>
+                <div className="p-5 sm:p-6">
+                  {benefitForm?.service_id === service.id ? (
+                    <div className="mb-5">
+                      <BenefitForm
+                        initial={benefitForm}
+                        submitting={saveBenefit.isPending}
+                        onCancel={() => setBenefitForm(null)}
+                        onSubmit={(draft) =>
+                          saveBenefit.mutate(draft, {
+                            onSuccess: () => {
+                              toast.success("혜택을 저장했습니다.");
+                              setBenefitForm(null);
+                            },
+                            onError: (error) => toast.error(`저장 실패: ${error.message}`),
                           })
                         }
-                        onDelete={() => {
-                          if (!confirm(`'${b.name}' 혜택을 삭제할까요?`)) return;
-                          deleteBenefit.mutate(b.id, {
-                            onSuccess: () => toast.success("삭제했습니다."),
-                            onError: (e) => toast.error(`삭제 실패: ${e.message}`),
-                          });
-                        }}
                       />
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  ) : null}
+                  {list.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">등록된 혜택이 없습니다.</p>
+                  ) : (
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {list.map((benefit) => (
+                        <BenefitCard
+                          key={benefit.id}
+                          benefit={benefit}
+                          onEdit={() => setBenefitForm({ ...benefit })}
+                          onDelete={() => {
+                            if (!confirm(`'${benefit.name}' 혜택을 삭제할까요?`)) return;
+                            deleteBenefit.mutate(benefit.id, {
+                              onSuccess: () => toast.success("삭제했습니다."),
+                              onError: (error) => toast.error(`삭제 실패: ${error.message}`),
+                            });
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               </section>
             );
           })}

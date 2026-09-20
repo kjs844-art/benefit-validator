@@ -6,9 +6,9 @@ import { Wordmark } from "@/components/brand";
 export const Route = createFileRoute("/oauth/gmail/return")({
   head: () => ({
     meta: [
-      { title: "Gmail 연결 완료 · 남은혜택" },
+      { title: "Gmail 연결 완료 · KeyAtlas" },
       { name: "description", content: "Gmail 읽기 전용 연결을 완료합니다." },
-      { property: "og:title", content: "Gmail 연결 완료 · 남은혜택" },
+      { property: "og:title", content: "Gmail 연결 완료 · KeyAtlas" },
       { property: "og:description", content: "Gmail 읽기 전용 연결을 완료합니다." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -33,7 +33,11 @@ function GmailReturnPage() {
       <div className="w-full max-w-sm">
         <Wordmark />
         <div className="surface-panel mt-5 flex items-center gap-3 p-6">
-          <LoaderCircle className="size-5 animate-spin text-primary" strokeWidth={1.5} aria-hidden="true" />
+          <LoaderCircle
+            className="size-5 animate-spin text-primary"
+            strokeWidth={1.5}
+            aria-hidden="true"
+          />
           <p className="text-sm">{message}</p>
         </div>
       </div>

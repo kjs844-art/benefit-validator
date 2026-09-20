@@ -12,7 +12,7 @@ let serverEntryPromise: Promise<ServerEntry> | undefined;
 async function getServerEntry(): Promise<ServerEntry> {
   if (!serverEntryPromise) {
     serverEntryPromise = import("@tanstack/react-start/server-entry").then(
-      (m) => (m.default ?? m) as ServerEntry,
+      (module) => (module.default ?? module) as ServerEntry,
     );
   }
   return serverEntryPromise;
@@ -35,6 +35,17 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   });
 }
 
+function withWebMcpHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  headers.set("Origin-Agent-Cluster", "?1");
+  headers.set("Permissions-Policy", "tools=(self)");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 function isH3SwallowedErrorBody(body: string): boolean {
   try {
     const payload = JSON.parse(body) as { unhandled?: unknown; message?: unknown };
@@ -49,13 +60,15 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return withWebMcpHeaders(await normalizeCatastrophicSsrResponse(response));
     } catch (error) {
       console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
+      return withWebMcpHeaders(
+        new Response(renderErrorPage(), {
+          status: 500,
+          headers: { "content-type": "text/html; charset=utf-8" },
+        }),
+      );
     }
   },
 };

@@ -21,21 +21,17 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   },
   head: () => ({
     meta: [
-      { title: "AI 도구 연결 · 남은혜택" },
-      { name: "description", content: "남은혜택 AI 도구 연결을 승인합니다." },
-      { property: "og:title", content: "AI 도구 연결 · 남은혜택" },
-      { property: "og:description", content: "남은혜택 AI 도구 연결을 승인합니다." },
+      { title: "AI 도구 연결 · KeyAtlas" },
+      { name: "description", content: "KeyAtlas AI 도구 연결을 승인합니다." },
+      { property: "og:title", content: "AI 도구 연결 · KeyAtlas" },
+      { property: "og:description", content: "KeyAtlas AI 도구 연결을 승인합니다." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
   }),
   loader: async ({ location }) => {
-    const authorizationId = new URLSearchParams(location.search).get(
-      "authorization_id",
-    )!;
-    const { data, error } = await supabase.auth.oauth.getAuthorizationDetails(
-      authorizationId,
-    );
+    const authorizationId = new URLSearchParams(location.search).get("authorization_id")!;
+    const { data, error } = await supabase.auth.oauth.getAuthorizationDetails(authorizationId);
     if (error) throw new Error(error.message);
     if (!data) throw new Error("승인 요청을 찾을 수 없습니다.");
     // Already-approved client: the provider resolves immediately.
@@ -48,10 +44,9 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
       <div className="w-full max-w-sm">
         <Wordmark />
         <div className="surface-panel mt-5 p-6 text-sm">
-        <h1 className="font-semibold">승인 요청을 표시할 수 없습니다</h1>
-        <p className="mt-2 text-muted-foreground">
-          {String((error as Error)?.message ?? error)}
-        </p></div>
+          <h1 className="font-semibold">승인 요청을 표시할 수 없습니다</h1>
+          <p className="mt-2 text-muted-foreground">{String((error as Error)?.message ?? error)}</p>
+        </div>
       </div>
     </main>
   ),
@@ -85,34 +80,41 @@ function Consent() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm">
+    <main className="hero-glow flex min-h-screen items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md">
         <Wordmark />
-        <div className="surface-panel mt-5 p-6">
-        <h1 className="text-lg font-semibold">
-          {clientName}를 남은혜택 계정에 연결
-        </h1>
-        <p className="mt-3 text-xs text-muted-foreground">
-          로그인된 계정: {details.user?.email ?? "알 수 없음"}
-        </p>
-        {error ? (
-          <p role="alert" className="mt-3 text-sm text-destructive">
-            {error}
+        <div className="dark-panel mt-6 rounded-[1.75rem] p-7">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-sidebar-primary">
+            MCP connection
           </p>
-        ) : null}
-        <div className="mt-5 flex gap-2">
-          <Button className="flex-1" disabled={busy} onClick={() => decide(true)}>
-            {busy ? "처리 중…" : "연결 승인"}
-          </Button>
-          <Button
-            variant="outline"
-            className="flex-1"
-            disabled={busy}
-            onClick={() => decide(false)}
-          >
-            연결 취소
-          </Button>
-        </div>
+          <h1 className="mt-3 text-2xl font-bold text-sidebar-foreground">
+            {clientName}를 KeyAtlas에 연결
+          </h1>
+          <p className="mt-3 text-sm text-sidebar-foreground/55">
+            로그인된 계정: {details.user?.email ?? "알 수 없음"}
+          </p>
+          {error ? (
+            <p role="alert" className="mt-3 text-sm text-destructive">
+              {error}
+            </p>
+          ) : null}
+          <div className="mt-5 flex gap-2">
+            <Button
+              className="flex-1 rounded-xl bg-sidebar-primary text-sidebar-primary-foreground"
+              disabled={busy}
+              onClick={() => decide(true)}
+            >
+              {busy ? "처리 중…" : "연결 승인"}
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 rounded-xl border-sidebar-border bg-transparent text-sidebar-foreground hover:bg-sidebar-accent"
+              disabled={busy}
+              onClick={() => decide(false)}
+            >
+              연결 취소
+            </Button>
+          </div>
         </div>
       </div>
     </main>

@@ -9,7 +9,12 @@ export default defineTool({
     "Create a subscription service record (e.g. a streaming plan) for the signed-in user, so benefits can be attached to it.",
   inputSchema: {
     name: z.string().trim().min(1).max(120).describe("Service display name, e.g. 'StreamPlus'."),
-    provider: z.string().trim().max(120).nullish().describe("Company providing the service, if known."),
+    provider: z
+      .string()
+      .trim()
+      .max(120)
+      .nullish()
+      .describe("Company providing the service, if known."),
     plan_name: z.string().trim().max(120).nullish().describe("Plan name, if known."),
     subscription_status: z
       .enum(["active", "trial", "trial_ended", "paused", "cancelled", "unknown"])
@@ -23,7 +28,7 @@ export default defineTool({
   annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
   handler: async (input, ctx) => {
     if (!ctx.isAuthenticated()) {
-      throw new ToolError("Sign in as a Benefit Validator user to create data.");
+      throw new ToolError("Sign in as a KeyAtlas user to create data.");
     }
     const supabase = supabaseForUser(ctx);
     const { data, error } = await supabase

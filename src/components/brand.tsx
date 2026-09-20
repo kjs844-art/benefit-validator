@@ -22,7 +22,7 @@ export function Wordmark({ className }: { className?: string }) {
     >
       <Mark />
       <span>
-        남은혜택<span className="ml-1 text-primary">.</span>
+        KeyAtlas<span className="ml-1 text-primary">.</span>
       </span>
     </span>
   );
