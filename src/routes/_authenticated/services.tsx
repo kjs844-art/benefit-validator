@@ -210,7 +210,7 @@ function ServicesPage() {
         <div>
           <h1 className="text-2xl font-bold">서비스·혜택</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            서비스 계정을 등록하고 혜택을 직접 입력합니다. 자동 조회는 하지 않습니다.
+            서비스와 혜택을 직접 등록해 관리합니다.
           </p>
         </div>
         <Button onClick={() => setServiceForm(emptyService())}>서비스 추가</Button>

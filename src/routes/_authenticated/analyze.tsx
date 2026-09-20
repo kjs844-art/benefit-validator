@@ -192,8 +192,7 @@ function AnalyzePage() {
     <AppShell email={user?.email}>
       <h1 className="text-2xl font-bold">AI 자료 분석</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        결제 안내문·요금제 설명을 붙여넣거나 화면 캡처를 올리면 혜택 항목을 정리합니다. 저장 전에 직접
-        검토하고 고칠 수 있습니다. 외부 계정에 접속하지 않습니다.
+        안내문이나 캡처를 올리면 혜택 항목으로 정리합니다. 저장 전에 직접 고칠 수 있습니다.
       </p>
       {usage.data ? (
         <p className="mt-2 text-xs text-muted-foreground">

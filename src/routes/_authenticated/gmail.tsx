@@ -131,9 +131,8 @@ function GmailPage() {
   return (
     <AppShell email={user?.email}>
       <h1 className="text-2xl font-bold">Gmail 메일 분석</h1>
-      <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
-        읽기 권한으로 최근 2년의 가입·체험·혜택·결제 안내 후보만 확인합니다. 메일을 보내거나 수정·삭제하지
-        않으며, 원문 전체는 저장하지 않습니다.
+      <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+        읽기 전용으로 가입·체험·혜택 안내 메일만 찾습니다. 원문은 저장하지 않습니다.
       </p>
 
       <section className="surface-panel mt-5 p-5">
@@ -173,7 +172,7 @@ function GmailPage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold">메일에서 확인된 가입 서비스</h2>
-            <p className="mt-1 text-sm text-muted-foreground">현재 잔량이 메일에 없으면 추측하지 않고 잔량 확인 필요로 표시합니다.</p>
+            <p className="mt-1 text-sm text-muted-foreground">메일에 없는 잔량은 추측하지 않습니다.</p>
           </div>
           {(discoveries.data?.length ?? 0) > 0 ? (
             <Button variant="outline" onClick={() => deleteMutation.mutate()} disabled={deleteMutation.isPending}>
@@ -187,7 +186,7 @@ function GmailPage() {
         ) : null}
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {(discoveries.data ?? []).map((item) => (
-            <article key={item.id} className="surface-panel p-4">
+            <article key={item.id} className="surface-panel surface-panel-hover p-4">
               <div className="flex items-start justify-between gap-3">
                 <div><p className="text-xs text-muted-foreground">{item.service_name}</p><h3 className="font-semibold">{item.benefit_name}</h3></div>
                 <span className="text-xs text-muted-foreground">신뢰도 {item.confidence}</span>
