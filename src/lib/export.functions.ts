@@ -19,7 +19,11 @@ export const exportMyData = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
 
     // RLS 는 이미 본인 행만 허용하지만, 소유권 조건을 서버에서도 한 번 더 명시합니다.
-    const [{ data: services, error: sErr }, { data: benefits, error: bErr }] = await Promise.all([
+    const [
+      { data: services, error: sErr },
+      { data: benefits, error: bErr },
+      { data: emailDiscoveries, error: eErr },
+    ] = await Promise.all([
       supabase
         .from("services")
         .select(
@@ -34,17 +38,29 @@ export const exportMyData = createServerFn({ method: "GET" })
         )
         .eq("user_id", userId)
         .order("created_at", { ascending: true }),
+      supabase
+        .from("email_discoveries")
+        .select(
+          "id, service_name, benefit_kind, benefit_name, unit, granted_amount, remaining_amount, trial_days, remaining_days, expires_at, evidence_date, evidence_subject, confidence, source_provider, created_at, updated_at",
+        )
+        .eq("user_id", userId)
+        .order("evidence_date", { ascending: true }),
     ]);
 
-    if (sErr || bErr) throw new Error("데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    if (sErr || bErr || eErr) throw new Error("데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
 
     return {
       format: EXPORT_FORMAT_VERSION,
       dataset: "user" as const,
       exported_at: new Date().toISOString(),
       scope: "본인 계정의 서비스·혜택 데이터만 포함합니다. 비밀번호·토큰·서버 비밀키는 포함되지 않습니다.",
-      counts: { services: services?.length ?? 0, benefits: benefits?.length ?? 0 },
+      counts: {
+        services: services?.length ?? 0,
+        benefits: benefits?.length ?? 0,
+        email_discoveries: emailDiscoveries?.length ?? 0,
+      },
       services: services ?? [],
       benefits: benefits ?? [],
+      email_discoveries: emailDiscoveries ?? [],
     };
   });

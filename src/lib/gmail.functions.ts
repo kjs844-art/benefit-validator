@@ -199,7 +199,12 @@ export const scanGmail = createServerFn({ method: "POST" })
       const subject = header(message, "Subject") || "제목 없음";
       const body = (textFromPart(message.payload) || message.snippet || "").replace(/\s+/g, " ").slice(0, 3000);
       const timestamp = message.internalDate ? Number(message.internalDate) : Number.NaN;
-      const date = Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : new Date(header(message, "Date")).toISOString();
+      const headerTimestamp = Date.parse(header(message, "Date"));
+      const date = Number.isFinite(timestamp)
+        ? new Date(timestamp).toISOString()
+        : Number.isFinite(headerTimestamp)
+          ? new Date(headerTimestamp).toISOString()
+          : new Date().toISOString();
       messages.push({ id, date, subject, body });
     }
 

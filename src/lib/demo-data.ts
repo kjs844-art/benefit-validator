@@ -64,6 +64,17 @@ export function buildDemoData(): DemoDataset {
       trial_ends_at: null,
       notes: null,
     },
+    {
+      id: "demo-svc-4",
+      name: "디자인 스튜디오",
+      provider: "Demo Design",
+      plan_name: "Pro 체험",
+      account_label: "샘플 Gmail 분석",
+      timezone: "Asia/Seoul",
+      subscription_status: "trial",
+      trial_ends_at: anchor(4),
+      notes: "메일에서 확인된 가입 서비스 예시입니다.",
+    },
   ];
 
   const benefits: BenefitRecord[] = [
@@ -151,6 +162,23 @@ export function buildDemoData(): DemoDataset {
       observed_timezone: "Asia/Seoul",
       source_kind: "manual",
       source_note: null,
+    },
+    {
+      id: "demo-b-6",
+      service_id: "demo-svc-4",
+      name: "Pro 무료 체험",
+      unit: "일",
+      granted_amount: 14,
+      remaining_amount: null,
+      monthly_cap: null,
+      extra_limit_note: "메일에 현재 남은 기간이 없어 잔량 확인 필요",
+      reset_rule: "none",
+      reset_anchor: null,
+      observed_at: iso(1, 0, 0),
+      observed_precision: "day",
+      observed_timezone: "Asia/Seoul",
+      source_kind: "email",
+      source_note: "근거 메일: 2026-09-19 · Pro 무료 체험이 시작되었습니다 · 신뢰도 높음",
     },
   ];
 

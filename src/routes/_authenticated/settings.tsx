@@ -38,7 +38,7 @@ function SettingsPage() {
       a.click();
       URL.revokeObjectURL(url);
       toast.success(
-        `서비스 ${payload.counts.services}건, 혜택 ${payload.counts.benefits}건을 내보냈습니다.`,
+        `서비스 ${payload.counts.services}건, 혜택 ${payload.counts.benefits}건, 메일 분석 ${payload.counts.email_discoveries}건을 내보냈습니다.`,
       );
     } catch (e) {
       toast.error(`내보내기 실패: ${e instanceof Error ? e.message : "알 수 없는 오류"}`);
@@ -54,8 +54,8 @@ function SettingsPage() {
       <section className="surface-panel mt-5 p-5">
         <h2 className="text-lg font-semibold">내 데이터 내보내기</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          내 서비스와 혜택 기록을 JSON 파일로 저장합니다. 단위, 시간대, 출처 종류, 마지막 확인 시점과
-          그 정밀도가 그대로 보존되며, 내보낸 시각과 파일 형식 버전이 함께 기록됩니다.
+          내 서비스·혜택·메일 분석 기록을 JSON 파일로 저장합니다. 단위, 시간대, 출처 종류, 근거 메일의
+          날짜와 제목, 마지막 확인 시점이 보존되며 내보낸 시각과 파일 형식 버전이 함께 기록됩니다.
         </p>
         <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
           <li>· 다른 사용자의 데이터는 포함되지 않습니다.</li>

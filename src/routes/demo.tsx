@@ -78,7 +78,7 @@ function DemoPage() {
         </div>
 
         <section>
-          <h1 className="text-2xl font-bold">데모 대시보드</h1>
+           <h1 className="text-2xl font-bold">데모 대시보드</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             같은 단위끼리만 합산합니다. 값을 모르는 항목은 합계에서 제외되고 &quot;모름&quot;으로 표시됩니다.
           </p>
@@ -97,6 +97,12 @@ function DemoPage() {
         </section>
 
         <section className="space-y-4">
+          <div>
+            <h2 className="text-lg font-semibold">메일에서 확인된 가입 서비스</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              샘플 메일 분석 결과입니다. 실제 Gmail 연결이나 메일 원문은 사용하지 않습니다.
+            </p>
+          </div>
           {data.services.map((service) => {
             const benefits = data.benefits.filter((b) => b.service_id === service.id);
             const nextResets = benefits
