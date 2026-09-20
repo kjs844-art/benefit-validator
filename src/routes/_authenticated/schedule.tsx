@@ -52,7 +52,7 @@ function SchedulePage() {
     <AppShell email={user?.email}>
       <h1 className="text-2xl font-bold">일정</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        리셋 시각이 지나도 잔량은 자동으로 늘어나지 않습니다. 다시 확인이 필요한 항목만 표시합니다.
+        다시 확인이 필요한 항목과 리셋 예정만 모았습니다.
       </p>
 
       {loading ? (

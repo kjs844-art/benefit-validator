@@ -97,7 +97,7 @@ export function BenefitCard({
 
       {stale ? (
         <p className="mt-3 rounded-md border border-unknown/40 bg-unknown/10 px-3 py-2 text-xs leading-relaxed text-unknown">
-          리셋 시각이 지났습니다. 잔량이 자동으로 늘어나지는 않으므로, 실제 값을 다시 확인해 주세요.
+          리셋 시각이 지났습니다. 실제 값을 다시 확인해 주세요.
         </p>
       ) : null}
 
