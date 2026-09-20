@@ -1,10 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
-import { Chip } from "@/components/figures";
-import { PageHeader, SectionHeading } from "@/components/page";
 import { useAuth } from "@/hooks/useAuth";
 import { analyzeMaterial, getAiUsage, type ExtractedBenefit } from "@/lib/ai.functions";
 import { useSaveBenefits, useSaveService, useServices } from "@/lib/data";
@@ -25,6 +23,9 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/analyze")({
+  beforeLoad: () => {
+    throw redirect({ to: "/gmail" });
+  },
   head: () => ({
     meta: [
       { title: "AI 자료 분석 · 남은혜택" },
@@ -88,8 +89,7 @@ function AnalyzePage() {
         })),
       );
       usage.refetch();
-      if ((result.benefits ?? []).length === 0)
-        toast.message("자료에서 혜택 항목을 찾지 못했습니다.");
+      if ((result.benefits ?? []).length === 0) toast.message("자료에서 혜택 항목을 찾지 못했습니다.");
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -193,22 +193,17 @@ function AnalyzePage() {
 
   return (
     <AppShell email={user?.email}>
-      <PageHeader
-        eyebrow="붙여넣기와 캡처"
-        title="AI 자료 분석"
-        description="요금제 안내문을 붙여넣거나 화면을 캡처해 올리면 혜택 항목으로 정리합니다. 저장하기 전에 값을 직접 고칠 수 있습니다."
-        actions={
-          usage.data ? (
-            <Chip>
-              오늘 사용 <span className="tnum ml-1">{usage.data.used}</span>
-              <span className="mx-1 text-muted-foreground">/</span>
-              <span className="tnum">{usage.data.limit}</span>
-            </Chip>
-          ) : null
-        }
-      />
+      <h1 className="text-2xl font-bold">AI 자료 분석</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        안내문이나 캡처를 올리면 혜택 항목으로 정리합니다. 저장 전에 직접 고칠 수 있습니다.
+      </p>
+      {usage.data ? (
+        <p className="mt-2 text-xs text-muted-foreground">
+          오늘 사용 {usage.data.used} / {usage.data.limit}회 (한도는 서버에서 적용됩니다)
+        </p>
+      ) : null}
 
-      <div className="surface-panel mt-8 space-y-5 p-6">
+      <div className="surface-panel mt-5 space-y-4 p-4">
         <div className="space-y-1.5">
           <Label htmlFor="material">자료 텍스트</Label>
           <Textarea
@@ -217,7 +212,7 @@ function AnalyzePage() {
             maxLength={20000}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="예: 스탠다드 요금제, 이번 달 무료 배송 쿠폰 3회 중 1회 남음 (2026-09-12 확인)"
+            placeholder="예: 스탠다드 요금제 — 이번 달 무료 배송 쿠폰 3회 중 1회 남음 (2026-09-12 확인)"
           />
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -252,33 +247,32 @@ function AnalyzePage() {
       </div>
 
       {warnings.length > 0 ? (
-        <ul className="mt-4 space-y-1.5 rounded-md border border-unknown/35 bg-unknown/10 px-4 py-3 text-xs leading-relaxed text-unknown">
+        <ul className="mt-4 space-y-1 rounded-lg border border-unknown/40 bg-unknown/10 p-3 text-xs text-unknown">
           {warnings.map((w) => (
-            <li key={w}>{w}</li>
+            <li key={w}>· {w}</li>
           ))}
         </ul>
       ) : null}
 
       {rows ? (
-        <div className="mt-10 space-y-4">
-          <SectionHeading
-            title="검토 후 저장"
-            description="빈 칸은 0이 아니라 모름으로 저장됩니다. 잘못된 값은 저장한 뒤 서비스·혜택 화면에서 고칠 수 있습니다."
-          />
+        <div className="mt-6 space-y-3">
+          <h2 className="text-lg font-semibold">검토 후 저장</h2>
+          <p className="text-sm text-muted-foreground">
+            값이 비어 있으면 &quot;모름&quot;으로 저장됩니다. 잘못된 값은 저장 후 서비스·혜택 화면에서
+            수정할 수 있습니다.
+          </p>
           {rows.map((row, i) => (
-            <div key={`${row.service_name}-${row.benefit_name}-${i}`} className="surface-panel p-5">
+            <div key={`${row.service_name}-${row.benefit_name}-${i}`} className="surface-panel p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <label className="flex cursor-pointer items-center gap-2.5 text-sm font-medium">
+                <label className="flex items-center gap-2 text-sm font-medium">
                   <input
                     type="checkbox"
-                    className="size-4 cursor-pointer accent-primary"
                     checked={row.include}
                     onChange={(e) => updateRow(i, { include: e.target.checked })}
                   />
-                  <span className="text-muted-foreground">{row.service_name}</span>
-                  {row.benefit_name}
+                  {row.service_name} · {row.benefit_name}
                 </label>
-                <Chip>신뢰도 {row.confidence}</Chip>
+                <span className="text-xs text-muted-foreground">신뢰도 {row.confidence}</span>
               </div>
               <div className="mt-3 grid gap-3 sm:grid-cols-4">
                 <div className="space-y-1">
@@ -288,8 +282,7 @@ function AnalyzePage() {
                     placeholder="모름"
                     onChange={(e) =>
                       updateRow(i, {
-                        granted_amount:
-                          e.target.value.trim() === "" ? null : Number(e.target.value),
+                        granted_amount: e.target.value.trim() === "" ? null : Number(e.target.value),
                       })
                     }
                   />
@@ -334,19 +327,16 @@ function AnalyzePage() {
                   </Select>
                 </div>
               </div>
-              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-hairline pt-3 text-xs text-muted-foreground">
-                <span>{RESET_RULE_LABELS[row.reset_rule]}</span>
-                <span>월 상한 {formatAmount(row.monthly_cap, row.unit)}</span>
-                <span>
-                  {row.observed_date
-                    ? `자료상 확인일 ${row.observed_date}${row.observed_time ? ` ${row.observed_time}` : " (시각 없음)"}`
-                    : "확인 시점 모름"}
-                </span>
-                {row.note ? <span>{row.note}</span> : null}
-              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {RESET_RULE_LABELS[row.reset_rule]} · 월 상한 {formatAmount(row.monthly_cap, row.unit)}
+                {row.observed_date
+                  ? ` · 자료상 확인일 ${row.observed_date}${row.observed_time ? ` ${row.observed_time}` : " (시각 없음)"}`
+                  : " · 확인 시점 모름"}
+                {row.note ? ` · ${row.note}` : ""}
+              </p>
             </div>
           ))}
-          <div className="flex gap-2 pt-1">
+          <div className="flex gap-2">
             <Button onClick={saveAll} disabled={saving}>
               {saving ? "저장 중…" : "선택 항목 저장"}
             </Button>
