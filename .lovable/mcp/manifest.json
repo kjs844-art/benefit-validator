@@ -11,9 +11,9 @@
   },
   "mcp": {
     "server": {
-      "name": "benefit-validator",
+      "name": "keyatlas",
       "version": "0.1.0",
-      "title": "Benefit Validator"
+      "title": "KeyAtlas"
     },
     "tools": [
       {
