@@ -11,3 +11,4 @@
 - [ ] Google 서비스 연결 (Calendar/Drive/Sheets/Docs 등)
 - [x] X(Twitter) 연결 — 사용자 요청으로 건너뜀
 - [ ] "구글 계정만으로 가입 사이트·잔여 크레딧 조회" 요청의 가능 범위 정리 (Google이 타사 가입 목록/크레딧 잔량 API를 제공하지 않음을 근거와 함께 설명)
+- [x] Gmail 연결 흐름 실검증: 가입→/gmail→연결 버튼→실제 Google 로그인 화면(accounts.google.com) 팝업 확인. Google 로그인 이후 동의~분석은 사용자 본인 계정 필요
