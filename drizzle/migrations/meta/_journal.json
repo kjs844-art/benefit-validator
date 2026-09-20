@@ -15,6 +15,13 @@
       "when": 1789872419550,
       "tag": "0001_add_gmail_connections_and_discoveries",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789872613204,
+      "tag": "0002_allow_email_and_mcp_benefit_sources",
+      "breakpoints": true
     }
   ]
 }
