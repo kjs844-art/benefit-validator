@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/AppShell";
@@ -209,23 +209,16 @@ function GmailPage() {
                 </Button>
               </>
             ) : (
-              <>
-                <Button
-                  onClick={() => connectMutation.mutate()}
-                  disabled={connectMutation.isPending}
-                  className="rounded-xl bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90"
-                >
-                  <Link2 className="mr-2 size-4" />
-                  {status.data?.reconnectRequired ? "Google 다시 연결" : "Google 연결하기"}
-                </Button>
-                <Link
-                  to="/analyze"
-                  className="inline-flex items-center rounded-xl border border-sidebar-border px-4 py-2 text-sm font-semibold text-sidebar-foreground hover:bg-sidebar-accent"
-                >
-                  메일 붙여넣어 찾기
-                </Link>
-              </>
+              <Button
+                onClick={() => connectMutation.mutate()}
+                disabled={connectMutation.isPending}
+                className="rounded-xl bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90"
+              >
+                <Link2 className="mr-2 size-4" />
+                {status.data?.reconnectRequired ? "Google 다시 연결" : "Google 연결하기"}
+              </Button>
             )}
+
 
           </div>
         </div>
