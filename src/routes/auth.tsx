@@ -1,33 +1,30 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { ArrowLeft, Check, LockKeyhole, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Wordmark } from "@/components/brand";
 import { toast } from "sonner";
 import { z } from "zod";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>): { next?: string | undefined } => {
+  validateSearch: (search: Record<string, unknown>) => {
     const raw = typeof search["next"] === "string" ? search["next"] : "";
-    // Same-origin relative path only (no "//", no scheme).
-    const next = raw.startsWith("/") && !raw.startsWith("//") && !raw.includes("://") ? raw : "";
-    return { next: next || undefined };
+    return {
+      next: raw.startsWith("/") && !raw.startsWith("//") && !raw.includes("://") ? raw : undefined,
+    };
   },
   head: () => ({
     meta: [
-      { title: "로그인 · 남은혜택" },
-      { name: "description", content: "남은혜택 계정으로 로그인하거나 새 계정을 만듭니다." },
-      { property: "og:title", content: "로그인 · 남은혜택" },
-      { property: "og:description", content: "구독 혜택 잔량을 기록하는 남은혜택 계정 로그인." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { title: "로그인 · 남은혜택." },
+      { name: "description", content: "Google 계정으로 남은혜택을 시작하세요." },
     ],
   }),
   component: AuthPage,
 });
-
 const schema = z.object({
   email: z.string().trim().email("이메일 형식이 올바르지 않습니다.").max(255),
   password: z.string().min(8, "비밀번호는 8자 이상이어야 합니다.").max(72),
@@ -40,22 +37,29 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-
   function finishAuth() {
-    if (next) {
-      router.history.push(next);
-    } else {
-      router.navigate({ to: "/gmail" });
-    }
+    if (next) router.history.push(next);
+    else router.navigate({ to: "/gmail" });
   }
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) finishAuth();
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  async function socialSignIn(provider: "google") {
+    setBusy(true);
+    try {
+      const redirect_uri = next
+        ? `${window.location.origin}${next}`
+        : `${window.location.origin}/auth`;
+      const result = await lovable.auth.signInWithOAuth(provider, { redirect_uri });
+      if (result.error) throw result.error;
+      if (!result.redirected) finishAuth();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Google 로그인에 실패했습니다.");
+      setBusy(false);
+    }
+  }
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const parsed = schema.safeParse({ email, password });
@@ -75,7 +79,7 @@ function AuthPage() {
         });
         if (error) throw error;
         if (!data.session) {
-          toast.success("가입 확인 메일을 보냈습니다. 메일의 링크를 눌러 주세요.");
+          toast.success("가입 확인 메일을 보냈습니다.");
           return;
         }
         toast.success("가입이 완료되었습니다.");
@@ -89,7 +93,7 @@ function AuthPage() {
         finishAuth();
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "알 수 없는 오류";
+      const message = error instanceof Error ? error.message : "로그인에 실패했습니다.";
       toast.error(
         message.includes("Invalid login credentials")
           ? "이메일 또는 비밀번호가 올바르지 않습니다."
@@ -99,50 +103,73 @@ function AuthPage() {
       setBusy(false);
     }
   }
-
-  async function socialSignIn(provider: "google") {
-    setBusy(true);
-    try {
-      // Return to the preserved consent URL when in an OAuth consent flow;
-      // otherwise land on /auth, which forwards signed-in users to the app.
-      const redirect_uri = next
-        ? `${window.location.origin}${next}`
-        : `${window.location.origin}/auth`;
-      const result = await lovable.auth.signInWithOAuth(provider, { redirect_uri });
-      if (result.error) throw result.error;
-      if (!result.redirected) finishAuth();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "소셜 로그인에 실패했습니다.";
-      toast.error(message);
-      setBusy(false);
-    }
-  }
-
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm">
-        <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
-          ← 남은혜택 소개로
+    <div className="grid min-h-screen bg-background lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="dark-panel hidden flex-col justify-between p-10 lg:flex xl:p-16">
+        <Link to="/">
+          <Wordmark className="text-sidebar-foreground" />
         </Link>
-        <div className="surface-panel mt-4 p-6">
-          <h1 className="text-xl font-semibold">
-            {mode === "signin" ? "로그인" : "새 계정 만들기"}
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            내 혜택 데이터는 내 계정에서만 보입니다.
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-sidebar-primary">
+            Your benefits, verified
           </p>
-          <div className="mt-5 grid gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              disabled={busy}
-              onClick={() => socialSignIn("google")}
-            >
-              Google로 계속하기
-            </Button>
+          <h1 className="mt-5 max-w-md text-5xl font-bold leading-[1.05]">
+            잊고 있던 혜택을
+            <br />
+            다시 만나는 곳.
+          </h1>
+          <div className="mt-9 space-y-4 text-sm text-sidebar-foreground/65">
+            <p>
+              <Check className="mr-2 inline size-4 text-sidebar-primary" />
+              무료체험 종료일을 놓치지 않게
+            </p>
+            <p>
+              <Check className="mr-2 inline size-4 text-sidebar-primary" />
+              남은 크레딧과 쿠폰을 한눈에
+            </p>
+            <p>
+              <Check className="mr-2 inline size-4 text-sidebar-primary" />
+              메일 근거와 함께 정확하게
+            </p>
           </div>
-          <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
+        </div>
+        <p className="text-xs text-sidebar-foreground/40">Gmail은 읽기 전용으로 연결됩니다.</p>
+      </div>
+      <div className="flex items-center justify-center px-5 py-10 sm:px-8">
+        <div className="w-full max-w-md">
+          <Link
+            to="/"
+            className="mb-10 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="size-4" />
+            소개로 돌아가기
+          </Link>
+          <div className="mb-8 lg:hidden">
+            <Wordmark />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-primary">
+              {mode === "signin" ? "Welcome back" : "Get started"}
+            </p>
+            <h2 className="mt-2 text-4xl font-bold">
+              {mode === "signin" ? "다시 만나서 반가워요." : "내 혜택을 정리해볼까요?"}
+            </h2>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Google 계정으로 시작하면 가장 빠릅니다.
+            </p>
+          </div>
+          <Button
+            type="button"
+            onClick={() => socialSignIn("google")}
+            disabled={busy}
+            className="mt-8 h-13 w-full rounded-2xl bg-foreground text-background hover:bg-foreground/90"
+          >
+            <span className="mr-3 grid size-6 place-items-center rounded-md bg-white text-xs font-bold text-blue-600">
+              G
+            </span>
+            {busy ? "연결 중…" : "Google로 계속하기"}
+          </Button>
+          <div className="my-7 flex items-center gap-3 text-xs text-muted-foreground">
             <span className="h-px flex-1 bg-border" />
             또는 이메일로
             <span className="h-px flex-1 bg-border" />
@@ -158,10 +185,13 @@ function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 maxLength={255}
                 required
+                className="h-12 rounded-xl bg-card"
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="password">비밀번호 (8자 이상)</Label>
+              <Label htmlFor="password">
+                비밀번호 <span className="font-normal text-muted-foreground">(8자 이상)</span>
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -170,27 +200,38 @@ function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 maxLength={72}
                 required
+                className="h-12 rounded-xl bg-card"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={busy}>
+            <Button type="submit" className="h-12 w-full rounded-xl" disabled={busy}>
               {busy ? "처리 중…" : mode === "signin" ? "로그인" : "가입하기"}
             </Button>
           </form>
           <button
             type="button"
-            className="mt-4 w-full text-sm text-muted-foreground underline-offset-4 hover:underline"
+            className="mt-5 w-full text-sm text-muted-foreground hover:text-foreground hover:underline"
             onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
           >
             {mode === "signin" ? "계정이 없으신가요? 가입하기" : "이미 계정이 있으신가요? 로그인"}
           </button>
+          <div className="mt-8 grid grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded-xl bg-muted/60 p-3">
+              <LockKeyhole className="mb-2 size-4 text-primary" />
+              데이터 암호화
+            </div>
+            <div className="rounded-xl bg-muted/60 p-3">
+              <ShieldCheck className="mb-2 size-4 text-primary" />
+              읽기 전용 분석
+            </div>
+          </div>
+          <p className="mt-6 text-center text-xs text-muted-foreground">
+            로그인 없이{" "}
+            <Link to="/demo" className="font-semibold text-foreground underline underline-offset-4">
+              데모 체험
+            </Link>
+            도 가능합니다.
+          </p>
         </div>
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          로그인 없이 둘러보려면{" "}
-          <Link to="/demo" className="underline underline-offset-4">
-            데모 체험
-          </Link>
-          을 이용하세요.
-        </p>
       </div>
     </div>
   );

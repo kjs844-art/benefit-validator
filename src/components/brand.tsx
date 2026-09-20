@@ -1,21 +1,29 @@
-import { useId } from "react";
 import { cn } from "@/lib/utils";
 
 export function Mark({ className }: { className?: string }) {
-  const clip = useId();
   return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" className={cn("size-5 text-primary", className)} fill="none">
-      <defs>
-        <clipPath id={clip}>
-          <rect x="2" y="2" width="16" height="16" rx="4.5" />
-        </clipPath>
-      </defs>
-      <rect x="2" y="11" width="16" height="7" fill="currentColor" clipPath={`url(#${clip})`} />
-      <rect x="2" y="2" width="16" height="16" rx="4.5" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.6" />
-    </svg>
+    <span
+      className={cn(
+        "relative inline-flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-[0_8px_20px_-10px_oklch(0.4_0.15_157)]",
+        className,
+      )}
+      aria-hidden="true"
+    >
+      <span className="absolute left-2 top-2 size-2 rounded-full bg-current opacity-60" />
+      <span className="absolute bottom-2 right-2 size-3 rounded-[5px] border-2 border-current" />
+    </span>
   );
 }
 
 export function Wordmark({ className }: { className?: string }) {
-  return <span className={cn("inline-flex items-center gap-2 font-bold", className)}><Mark />남은혜택</span>;
+  return (
+    <span
+      className={cn("inline-flex items-center gap-2.5 font-bold tracking-[-0.04em]", className)}
+    >
+      <Mark />
+      <span>
+        남은혜택<span className="ml-1 text-primary">.</span>
+      </span>
+    </span>
+  );
 }

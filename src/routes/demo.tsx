@@ -3,7 +3,13 @@ import { useMemo, useState } from "react";
 import { buildDemoData, DEMO_NOTICE } from "@/lib/demo-data";
 import { BenefitCard } from "@/components/BenefitCard";
 import { Button } from "@/components/ui/button";
-import { formatAmount, isObservationStale, nextResetAt, STATUS_LABELS, sumByUnit } from "@/lib/benefits";
+import {
+  formatAmount,
+  isObservationStale,
+  nextResetAt,
+  STATUS_LABELS,
+  sumByUnit,
+} from "@/lib/benefits";
 import { EXPORT_FORMAT_VERSION } from "@/lib/export-format";
 import { Wordmark } from "@/components/brand";
 
@@ -56,13 +62,16 @@ function DemoPage() {
     <div className="min-h-screen">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-          <Link to="/"><Wordmark /></Link>
+          <Link to="/">
+            <Wordmark />
+          </Link>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={exportDemo}>
               데모 데이터 내보내기
             </Button>
             <Link
               to="/auth"
+              search={{ next: undefined }}
               className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
             >
               내 계정 시작
@@ -77,12 +86,14 @@ function DemoPage() {
         </div>
 
         <section>
-           <h1 className="text-2xl font-bold">데모 대시보드</h1>
+          <h1 className="text-2xl font-bold">데모 대시보드</h1>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {Object.entries(totals).map(([unit, total]) => (
               <div key={unit} className="surface-panel surface-panel-hover p-4">
                 <p className="text-xs text-muted-foreground">단위 {unit} 합계 (아는 값만)</p>
-                <p className="tnum mt-1 text-2xl font-bold text-primary">{formatAmount(total, unit)}</p>
+                <p className="tnum mt-1 text-2xl font-bold text-primary">
+                  {formatAmount(total, unit)}
+                </p>
               </div>
             ))}
             <div className="surface-panel surface-panel-hover p-4">
@@ -105,11 +116,15 @@ function DemoPage() {
                 <div className="flex flex-wrap items-baseline gap-2">
                   <h2 className="text-lg font-semibold">{service.name}</h2>
                   <span className="text-xs text-muted-foreground">
-                    {service.plan_name ?? "요금제 모름"} · {STATUS_LABELS[service.subscription_status]}
+                    {service.plan_name ?? "요금제 모름"} ·{" "}
+                    {STATUS_LABELS[service.subscription_status]}
                   </span>
                   {nextResets[0] ? (
                     <span className="text-xs text-muted-foreground">
-                      다음 리셋 {new Intl.DateTimeFormat("ko-KR", { dateStyle: "medium" }).format(nextResets[0])}
+                      다음 리셋{" "}
+                      {new Intl.DateTimeFormat("ko-KR", { dateStyle: "medium" }).format(
+                        nextResets[0],
+                      )}
                     </span>
                   ) : null}
                 </div>
@@ -122,7 +137,6 @@ function DemoPage() {
             );
           })}
         </section>
-
       </main>
     </div>
   );
