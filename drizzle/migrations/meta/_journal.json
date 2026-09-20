@@ -8,6 +8,13 @@
       "when": 1789732791680,
       "tag": "0000_create_namun_hyetaek_core",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789872419550,
+      "tag": "0001_add_gmail_connections_and_discoveries",
+      "breakpoints": true
     }
   ]
 }

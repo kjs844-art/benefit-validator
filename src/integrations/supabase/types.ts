@@ -35,6 +35,33 @@ export type Database = {
         }
         Relationships: []
       }
+      app_user_connections: {
+        Row: {
+          connection_key_ciphertext: string
+          connector_id: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          connection_key_ciphertext: string
+          connector_id: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          connection_key_ciphertext?: string
+          connector_id?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       benefits: {
         Row: {
           created_at: string
@@ -105,6 +132,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      email_discoveries: {
+        Row: {
+          benefit_kind: string
+          benefit_name: string
+          confidence: string
+          created_at: string
+          evidence_date: string
+          evidence_subject: string
+          expires_at: string | null
+          granted_amount: number | null
+          id: string
+          remaining_amount: number | null
+          remaining_days: number | null
+          service_name: string
+          source_message_id_hash: string
+          source_provider: string
+          trial_days: number | null
+          unit: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          benefit_kind: string
+          benefit_name: string
+          confidence: string
+          created_at?: string
+          evidence_date: string
+          evidence_subject: string
+          expires_at?: string | null
+          granted_amount?: number | null
+          id?: string
+          remaining_amount?: number | null
+          remaining_days?: number | null
+          service_name: string
+          source_message_id_hash: string
+          source_provider?: string
+          trial_days?: number | null
+          unit: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          benefit_kind?: string
+          benefit_name?: string
+          confidence?: string
+          created_at?: string
+          evidence_date?: string
+          evidence_subject?: string
+          expires_at?: string | null
+          granted_amount?: number | null
+          id?: string
+          remaining_amount?: number | null
+          remaining_days?: number | null
+          service_name?: string
+          source_message_id_hash?: string
+          source_provider?: string
+          trial_days?: number | null
+          unit?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       services: {
         Row: {
