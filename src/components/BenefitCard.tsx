@@ -28,13 +28,13 @@ export function BenefitCard({
   const next = nextResetAt(benefit);
 
   return (
-    <div className="surface-panel p-4">
+    <div className="surface-panel surface-panel-hover flex h-full flex-col p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           {serviceName ? (
             <p className="text-xs text-muted-foreground">{serviceName}</p>
           ) : null}
-          <h3 className="text-base font-semibold">{benefit.name}</h3>
+          <h3 className="text-base font-bold">{benefit.name}</h3>
         </div>
         <div className="flex flex-wrap gap-1.5">
           <Badge variant="secondary">{RESET_RULE_LABELS[benefit.reset_rule]}</Badge>
@@ -48,8 +48,8 @@ export function BenefitCard({
           <dd
             className={
               isUnknown(benefit.remaining_amount)
-                ? "text-lg font-semibold text-unknown"
-                : "text-lg font-semibold text-primary"
+                ? "tnum text-xl font-bold text-unknown"
+                : "tnum text-xl font-bold text-primary"
             }
           >
             {formatAmount(benefit.remaining_amount, benefit.unit)}
@@ -57,7 +57,7 @@ export function BenefitCard({
         </div>
         <div>
           <dt className="text-xs text-muted-foreground">지급량(총 제공량)</dt>
-          <dd className="text-lg font-semibold">
+          <dd className="tnum text-xl font-bold">
             {formatAmount(benefit.granted_amount, benefit.unit)}
           </dd>
         </div>
@@ -65,7 +65,10 @@ export function BenefitCard({
 
       {ratio !== null ? (
         <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-          <div className="h-full rounded-full bg-primary" style={{ width: `${ratio * 100}%` }} />
+          <div
+            className="h-full rounded-full bg-primary transition-[width] duration-500"
+            style={{ width: `${ratio * 100}%` }}
+          />
         </div>
       ) : (
         <p className="mt-3 text-xs text-muted-foreground">
@@ -73,7 +76,7 @@ export function BenefitCard({
         </p>
       )}
 
-      <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+      <div className="mt-3 space-y-1 text-xs leading-relaxed text-muted-foreground">
         <p>확인 시점: {formatObservedAt(benefit)}</p>
         {benefit.monthly_cap !== null ? (
           <p>월 상한: {formatAmount(benefit.monthly_cap, benefit.unit)}</p>
@@ -93,13 +96,13 @@ export function BenefitCard({
       </div>
 
       {stale ? (
-        <p className="mt-3 rounded-md border border-unknown/40 bg-unknown/10 px-3 py-2 text-xs text-unknown">
+        <p className="mt-3 rounded-md border border-unknown/40 bg-unknown/10 px-3 py-2 text-xs leading-relaxed text-unknown">
           리셋 시각이 지났습니다. 잔량이 자동으로 늘어나지는 않으므로, 실제 값을 다시 확인해 주세요.
         </p>
       ) : null}
 
       {(onEdit || onDelete) && (
-        <div className="mt-3 flex gap-2">
+        <div className="mt-auto flex gap-2 pt-3">
           {onEdit ? (
             <Button size="sm" variant="outline" onClick={onEdit}>
               수정
