@@ -52,6 +52,11 @@ function PrivacyPage() {
               <p className="mt-3">Gmail 권한은 읽기 전용입니다. KeyAtlas는 메일을 발송·수정·삭제하지 않으며, 메일 원문 전체를 저장하지 않습니다. 분석 결과에는 서비스명, 혜택 종류와 수량, 기간, 만료일, 근거 메일의 날짜와 제목 등 필요한 최소 정보만 저장합니다. 현재 잔량이 명시되지 않은 경우 숫자를 추측하지 않습니다.</p>
             </section>
             <section>
+              <h2 className="text-xl font-bold text-foreground">3-1. Google 사용자 데이터 제한된 사용</h2>
+              <p className="mt-3">KeyAtlas가 Google API로 수신한 정보의 사용 및 다른 앱으로의 전송은 제한된 사용 요건을 포함한 Google API 서비스 사용자 데이터 정책을 준수합니다. Google 사용자 데이터는 사용자에게 혜택 조회 기능을 제공하는 목적으로만 사용하며, 광고 목적으로 사용하거나 제3자에게 판매하지 않고, AI 모델 학습에 사용하지 않습니다. 사람이 열람하지 않으며, 예외는 사용자의 명시적 동의, 보안 목적, 법령 준수, 익명 집계 처리에 한합니다.</p>
+            </section>
+
+            <section>
               <h2 className="text-xl font-bold text-foreground">4. 보관과 삭제</h2>
               <p className="mt-3">계정 및 분석 결과는 서비스 제공 기간 동안 보관됩니다. 사용자는 앱에서 Gmail 연결을 해제하고 저장된 메일 분석 결과를 삭제할 수 있습니다. 연결 해제 시 저장된 Gmail 연결 자격 정보도 삭제됩니다.</p>
             </section>
