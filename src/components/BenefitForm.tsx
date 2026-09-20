@@ -87,8 +87,10 @@ export function BenefitForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="surface-panel space-y-4 p-4">
-      <div className="grid gap-3 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} className="surface-panel p-5">
+      <fieldset className="space-y-4">
+        <legend className="mb-4 text-sm font-semibold">혜택과 수량</legend>
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="b-name">혜택 이름</Label>
           <Input
@@ -117,7 +119,7 @@ export function BenefitForm({
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
           <Label htmlFor="b-granted">지급량 (모르면 비워 두세요)</Label>
           <Input
@@ -152,8 +154,11 @@ export function BenefitForm({
       <p className="text-xs text-muted-foreground">
         빈 칸은 &quot;모름&quot;으로 저장됩니다. 0 은 실제로 0 일 때만 입력하세요.
       </p>
+      </fieldset>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <fieldset className="mt-6 space-y-4 border-t border-border pt-5">
+        <legend className="pr-3 text-sm font-semibold">리셋과 제한</legend>
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label>리셋 주기</Label>
           <Select value={draft.reset_rule} onValueChange={(v) => set("reset_rule", v as ResetRule)}>
@@ -181,8 +186,15 @@ export function BenefitForm({
           />
         </div>
       </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="b-extra">추가 제한 / 메모 (선택)</Label>
+        <Textarea id="b-extra" maxLength={500} defaultValue={draft.extra_limit_note ?? ""} onChange={(e) => set("extra_limit_note", e.target.value.trim() || null)} placeholder="예: 기기당 100개 제한이 따로 있음" />
+      </div>
+      </fieldset>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <fieldset className="mt-6 space-y-4 border-t border-border pt-5">
+        <legend className="pr-3 text-sm font-semibold">확인 시점</legend>
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="b-observed">이 값을 확인한 시점</Label>
           <Input
@@ -212,19 +224,9 @@ export function BenefitForm({
           </Select>
         </div>
       </div>
+      </fieldset>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="b-extra">추가 제한 / 메모 (선택)</Label>
-        <Textarea
-          id="b-extra"
-          maxLength={500}
-          defaultValue={draft.extra_limit_note ?? ""}
-          onChange={(e) => set("extra_limit_note", e.target.value.trim() || null)}
-          placeholder="예: 기기당 100개 제한이 따로 있음"
-        />
-      </div>
-
-      <div className="flex gap-2">
+      <div className="mt-6 flex gap-2 border-t border-border pt-5">
         <Button type="submit" disabled={submitting}>
           {submitting ? "저장 중…" : "저장"}
         </Button>

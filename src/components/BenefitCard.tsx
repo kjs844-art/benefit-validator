@@ -2,14 +2,13 @@ import {
   formatAmount,
   formatObservedAt,
   isObservationStale,
-  isUnknown,
   nextResetAt,
   remainingRatio,
   RESET_RULE_LABELS,
   SOURCE_KIND_LABELS,
   type BenefitRecord,
 } from "@/lib/benefits";
-import { Badge } from "@/components/ui/badge";
+import { Amount, Chip, DetailRow, Meter } from "@/components/figures";
 import { Button } from "@/components/ui/button";
 
 export function BenefitCard({
@@ -28,72 +27,54 @@ export function BenefitCard({
   const next = nextResetAt(benefit);
 
   return (
-    <div className="surface-panel surface-panel-hover flex h-full flex-col p-4">
+    <article className="surface-panel surface-panel-hover flex h-full flex-col p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           {serviceName ? (
             <p className="text-xs text-muted-foreground">{serviceName}</p>
           ) : null}
-          <h3 className="text-base font-bold">{benefit.name}</h3>
+          <h3 className="text-base font-semibold">{benefit.name}</h3>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Badge variant="secondary">{RESET_RULE_LABELS[benefit.reset_rule]}</Badge>
-          <Badge variant="outline">{SOURCE_KIND_LABELS[benefit.source_kind]}</Badge>
+          <Chip>{RESET_RULE_LABELS[benefit.reset_rule]}</Chip>
         </div>
       </div>
 
       <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
         <div>
-          <dt className="text-xs text-muted-foreground">마지막 확인 시점의 남은 양</dt>
-          <dd
-            className={
-              isUnknown(benefit.remaining_amount)
-                ? "tnum text-xl font-bold text-unknown"
-                : "tnum text-xl font-bold text-primary"
-            }
-          >
-            {formatAmount(benefit.remaining_amount, benefit.unit)}
-          </dd>
+          <dt className="text-xs text-muted-foreground">남은 양</dt>
+          <dd><Amount value={benefit.remaining_amount} unit={benefit.unit} tone="primary" size="lg" /></dd>
         </div>
         <div>
           <dt className="text-xs text-muted-foreground">지급량(총 제공량)</dt>
-          <dd className="tnum text-xl font-bold">
-            {formatAmount(benefit.granted_amount, benefit.unit)}
-          </dd>
+          <dd><Amount value={benefit.granted_amount} unit={benefit.unit} /></dd>
         </div>
       </dl>
 
       {ratio !== null ? (
-        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full rounded-full bg-primary transition-[width] duration-500"
-            style={{ width: `${ratio * 100}%` }}
-          />
-        </div>
+        <div className="mt-3"><Meter ratio={ratio} label={`${benefit.name} 남은 비율`} /></div>
       ) : (
-        <p className="mt-3 text-xs text-muted-foreground">
-          지급량 또는 남은 양을 모르기 때문에 비율은 계산하지 않습니다.
-        </p>
+        <div className="mt-3 h-1.5 rounded-full bg-muted" />
       )}
 
-      <div className="mt-3 space-y-1 text-xs leading-relaxed text-muted-foreground">
-        <p>확인 시점: {formatObservedAt(benefit)}</p>
+      <dl className="mt-4 border-t border-border pt-3">
+        <DetailRow label="확인 시점">{formatObservedAt(benefit)}</DetailRow>
         {benefit.monthly_cap !== null ? (
-          <p>월 상한: {formatAmount(benefit.monthly_cap, benefit.unit)}</p>
+          <DetailRow label="월 상한">{formatAmount(benefit.monthly_cap, benefit.unit)}</DetailRow>
         ) : null}
-        {benefit.extra_limit_note ? <p>추가 제한: {benefit.extra_limit_note}</p> : null}
+        {benefit.extra_limit_note ? <DetailRow label="추가 제한">{benefit.extra_limit_note}</DetailRow> : null}
         {next ? (
-          <p>
-            다음 리셋 예정:{" "}
+          <DetailRow label="다음 리셋">
             {new Intl.DateTimeFormat("ko-KR", {
               dateStyle: "medium",
               timeStyle: "short",
+              hour12: false,
               timeZone: benefit.observed_timezone,
             }).format(next)}
-          </p>
+          </DetailRow>
         ) : null}
-        {benefit.source_note ? <p>출처 메모: {benefit.source_note}</p> : null}
-      </div>
+        <DetailRow label="출처">{SOURCE_KIND_LABELS[benefit.source_kind]}{benefit.source_note ? `, ${benefit.source_note}` : ""}</DetailRow>
+      </dl>
 
       {stale ? (
         <p className="mt-3 rounded-md border border-unknown/40 bg-unknown/10 px-3 py-2 text-xs leading-relaxed text-unknown">
@@ -115,6 +96,6 @@ export function BenefitCard({
           ) : null}
         </div>
       )}
-    </div>
+    </article>
   );
 }
