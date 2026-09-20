@@ -2,6 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { Wordmark } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -119,19 +120,19 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm">
-        <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
-          ← 남은혜택 소개로
-        </Link>
-        <div className="surface-panel mt-4 p-6">
-          <h1 className="text-xl font-semibold">
-            {mode === "signin" ? "로그인" : "새 계정 만들기"}
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            내 혜택 데이터는 내 계정에서만 보입니다.
+    <div className="page-top flex min-h-screen flex-col px-5 py-8">
+      <Link to="/" className="text-[0.95rem]">
+        <Wordmark />
+      </Link>
+
+      <div className="flex flex-1 items-center justify-center py-10">
+        <div className="w-full max-w-sm">
+          <h1 className="text-2xl">{mode === "signin" ? "로그인" : "새 계정 만들기"}</h1>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            기록한 혜택은 내 계정에서만 보입니다. Gmail 연결은 로그인 후 따로 승인합니다.
           </p>
-          <div className="mt-5 grid gap-2">
+
+          <div className="surface-panel mt-6 p-6">
             <Button
               type="button"
               variant="outline"
@@ -141,56 +142,60 @@ function AuthPage() {
             >
               Google로 계속하기
             </Button>
-          </div>
-          <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="h-px flex-1 bg-border" />
-            또는 이메일로
-            <span className="h-px flex-1 bg-border" />
-          </div>
-          <form className="space-y-4" onSubmit={submit}>
-            <div className="space-y-1.5">
-              <Label htmlFor="email">이메일</Label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                maxLength={255}
-                required
-              />
+
+            <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="h-px flex-1 bg-hairline" />
+              또는 이메일로
+              <span className="h-px flex-1 bg-hairline" />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="password">비밀번호 (8자 이상)</Label>
-              <Input
-                id="password"
-                type="password"
-                autoComplete={mode === "signin" ? "current-password" : "new-password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                maxLength={72}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={busy}>
-              {busy ? "처리 중…" : mode === "signin" ? "로그인" : "가입하기"}
-            </Button>
-          </form>
-          <button
-            type="button"
-            className="mt-4 w-full text-sm text-muted-foreground underline-offset-4 hover:underline"
-            onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          >
-            {mode === "signin" ? "계정이 없으신가요? 가입하기" : "이미 계정이 있으신가요? 로그인"}
-          </button>
+
+            <form className="space-y-4" onSubmit={submit}>
+              <div className="space-y-1.5">
+                <Label htmlFor="email">이메일</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  maxLength={255}
+                  required
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="password">비밀번호</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  maxLength={72}
+                  required
+                />
+                <p className="text-xs text-muted-foreground">8자 이상 입력해 주세요.</p>
+              </div>
+              <Button type="submit" className="w-full" disabled={busy}>
+                {busy ? "처리 중…" : mode === "signin" ? "로그인" : "가입하기"}
+              </Button>
+            </form>
+
+            <button
+              type="button"
+              className="mt-5 w-full cursor-pointer border-t border-hairline pt-4 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+            >
+              {mode === "signin" ? "계정이 없으신가요? 가입하기" : "이미 계정이 있으신가요? 로그인"}
+            </button>
+          </div>
+
+          <p className="mt-5 text-center text-sm text-muted-foreground">
+            로그인 없이 둘러보려면{" "}
+            <Link to="/demo" className="text-foreground underline underline-offset-4">
+              데모 보기
+            </Link>
+          </p>
         </div>
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          로그인 없이 둘러보려면{" "}
-          <Link to="/demo" className="underline underline-offset-4">
-            데모 체험
-          </Link>
-          을 이용하세요.
-        </p>
       </div>
     </div>
   );

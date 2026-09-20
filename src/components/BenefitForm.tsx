@@ -83,12 +83,17 @@ export function BenefitForm({
       toast.error("확인 시점을 올바르게 입력해 주세요.");
       return;
     }
-    onSubmit({ ...draft, name: draft.name.trim(), unit: draft.unit.trim(), observed_at: observed.toISOString() });
+    onSubmit({
+      ...draft,
+      name: draft.name.trim(),
+      unit: draft.unit.trim(),
+      observed_at: observed.toISOString(),
+    });
   }
 
   return (
-    <form onSubmit={handleSubmit} className="surface-panel space-y-4 p-4">
-      <div className="grid gap-3 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} className="surface-panel space-y-5 p-5">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="b-name">혜택 이름</Label>
           <Input
@@ -117,7 +122,7 @@ export function BenefitForm({
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
           <Label htmlFor="b-granted">지급량 (모르면 비워 두세요)</Label>
           <Input
@@ -153,7 +158,7 @@ export function BenefitForm({
         빈 칸은 &quot;모름&quot;으로 저장됩니다. 0 은 실제로 0 일 때만 입력하세요.
       </p>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label>리셋 주기</Label>
           <Select value={draft.reset_rule} onValueChange={(v) => set("reset_rule", v as ResetRule)}>
@@ -182,7 +187,7 @@ export function BenefitForm({
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="b-observed">이 값을 확인한 시점</Label>
           <Input

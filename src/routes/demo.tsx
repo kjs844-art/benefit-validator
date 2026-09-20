@@ -1,9 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { buildDemoData, DEMO_NOTICE } from "@/lib/demo-data";
 import { BenefitCard } from "@/components/BenefitCard";
+import { ServiceHeading } from "@/components/ServiceHeading";
+import { Wordmark } from "@/components/brand";
+import { Amount, StatStrip } from "@/components/figures";
+import { PageHeader } from "@/components/page";
 import { Button } from "@/components/ui/button";
-import { formatAmount, isObservationStale, nextResetAt, STATUS_LABELS, sumByUnit } from "@/lib/benefits";
+import { isObservationStale, nextResetAt, sumByUnit } from "@/lib/benefits";
 import { EXPORT_FORMAT_VERSION } from "@/lib/export-format";
 
 export const Route = createFileRoute("/demo")({
@@ -25,10 +29,6 @@ export const Route = createFileRoute("/demo")({
 
 function DemoPage() {
   const [data] = useState(() => buildDemoData());
-  const serviceName = useMemo(
-    () => Object.fromEntries(data.services.map((s) => [s.id, s.name])),
-    [data.services],
-  );
   const totals = sumByUnit(data.benefits);
   const stale = data.benefits.filter((b) => isObservationStale(b));
 
@@ -53,87 +53,86 @@ function DemoPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-          <Link to="/" className="font-display text-lg font-bold">
-            남은혜택
+      <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-3.5 lg:px-8">
+          <Link to="/" className="text-[0.95rem]">
+            <Wordmark />
           </Link>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={exportDemo}>
-              데모 데이터 내보내기
+              JSON 내보내기
             </Button>
             <Link
               to="/auth"
-              className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+              className="rounded-md bg-primary px-3.5 py-1.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
-              내 계정 시작
+              시작하기
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl space-y-6 px-4 py-6">
-        <div className="rounded-lg border border-unknown/40 bg-unknown/10 px-4 py-3 text-sm text-unknown">
-          {DEMO_NOTICE} 이 화면에서 입력한 내용은 계정에 저장되지 않습니다.
+      <main className="mx-auto max-w-5xl px-5 py-8 lg:px-8 lg:py-12">
+        <PageHeader
+          eyebrow="데모"
+          title="데모 대시보드"
+          description="샘플 데이터로 실제 화면을 그대로 보여 드립니다. 여기서 한 조작은 계정에 저장되지 않습니다."
+        />
+
+        <p className="mt-6 rounded-md border border-unknown/35 bg-unknown/10 px-4 py-3 text-sm leading-relaxed text-unknown">
+          {DEMO_NOTICE}
+        </p>
+
+        <div className="mt-6">
+          <StatStrip
+            items={[
+              ...Object.entries(totals).map(([unit, total]) => ({
+                label: `${unit} 합계`,
+                value: <Amount value={total} unit={unit} tone="primary" size="lg" />,
+                hint: "아는 값만 더합니다",
+              })),
+              {
+                label: "다시 확인 필요",
+                value: (
+                  <span className="figure-num text-3xl text-unknown">
+                    {stale.length}
+                    <span className="ml-1.5 font-sans text-sm font-normal text-muted-foreground">
+                      건
+                    </span>
+                  </span>
+                ),
+                hint: "리셋 시각이 지난 항목",
+              },
+            ]}
+          />
         </div>
 
-        <section>
-           <h1 className="text-2xl font-bold">데모 대시보드</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            샘플 데이터로 실제 화면을 그대로 보여드립니다.
-          </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            {Object.entries(totals).map(([unit, total]) => (
-              <div key={unit} className="surface-panel surface-panel-hover p-4">
-                <p className="text-xs text-muted-foreground">단위 {unit} 합계 (아는 값만)</p>
-                <p className="tnum mt-1 text-2xl font-bold text-primary">{formatAmount(total, unit)}</p>
-              </div>
-            ))}
-            <div className="surface-panel surface-panel-hover p-4">
-              <p className="text-xs text-muted-foreground">다시 확인이 필요한 항목</p>
-              <p className="tnum mt-1 text-2xl font-bold text-unknown">{stale.length}건</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold">메일에서 확인된 가입 서비스</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              디자인 스튜디오는 샘플 메일 분석 결과입니다.
-            </p>
-          </div>
+        <div className="mt-12 space-y-10">
           {data.services.map((service) => {
             const benefits = data.benefits.filter((b) => b.service_id === service.id);
-            const nextResets = benefits
+            const next = benefits
               .map((b) => nextResetAt(b))
               .filter((d): d is Date => d !== null)
-              .sort((a, b) => a.getTime() - b.getTime());
+              .sort((a, b) => a.getTime() - b.getTime())[0];
             return (
-              <div key={service.id} className="space-y-3">
-                <div className="flex flex-wrap items-baseline gap-2">
-                  <h2 className="text-lg font-semibold">{service.name}</h2>
-                  <span className="text-xs text-muted-foreground">
-                    {service.plan_name ?? "요금제 모름"} · {STATUS_LABELS[service.subscription_status]}
-                  </span>
-                  {nextResets[0] ? (
-                    <span className="text-xs text-muted-foreground">
-                      다음 리셋 {new Intl.DateTimeFormat("ko-KR", { dateStyle: "medium" }).format(nextResets[0])}
-                    </span>
-                  ) : null}
-                </div>
-                <div className="grid gap-3 md:grid-cols-2">
+              <section key={service.id}>
+                <ServiceHeading service={service} next={next} />
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
                   {benefits.map((b) => (
                     <BenefitCard key={b.id} benefit={b} />
                   ))}
                 </div>
-              </div>
+              </section>
             );
           })}
-        </section>
+        </div>
 
-        <p className="pb-10 text-xs text-muted-foreground">
-          데모 데이터는 예시이며 실제 서비스 계정과 연결되어 있지 않습니다.
+        <p className="mt-12 border-t border-hairline pt-6 text-xs leading-relaxed text-muted-foreground">
+          데모 데이터는 예시이며 실제 서비스 계정과 연결되어 있지 않습니다. 내 계정에서 쓰려면{" "}
+          <Link to="/auth" className="text-foreground underline underline-offset-4">
+            시작하기
+          </Link>
+          에서 로그인해 주세요.
         </p>
       </main>
     </div>

@@ -133,6 +133,9 @@ export function formatObservedAt(b: Pick<BenefitRecord, "observed_at" | "observe
           day: "2-digit",
           hour: "2-digit",
           minute: "2-digit",
+          // 24-hour: ko-KR day periods differ between the server and browser
+          // runtimes ("AM" vs "오전") and break hydration.
+          hour12: false,
           timeZone: b.observed_timezone,
         };
   const text = new Intl.DateTimeFormat("ko-KR", opts).format(d);
