@@ -19,6 +19,13 @@ export const Route = createFileRoute("/")({
         content:
           "계정에 남은 가입 흔적을 바탕으로 서비스, 무료체험, 크레딧, 쿠폰과 만료 정보를 찾아 정리합니다.",
       },
+      { property: "og:title", content: "KeyAtlas — 잊고 있던 가입 서비스와 혜택을 한눈에" },
+      {
+        property: "og:description",
+        content: "메일에서 확인된 가입 서비스, 무료 체험, 크레딧, 쿠폰과 만료 정보를 찾아 정리합니다.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Landing,
@@ -228,9 +235,13 @@ function Landing() {
           </div>
         </section>
       </main>
-      <footer className="mx-auto flex max-w-7xl items-center justify-between px-5 py-8 text-xs text-muted-foreground sm:px-8 lg:px-12">
+      <footer className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-8 text-xs text-muted-foreground sm:px-8 lg:px-12">
         <Wordmark className="scale-90 origin-left" />
-        <span>© 2026 KeyAtlas. 개인 혜택을 잊지 않도록.</span>
+        <div className="flex items-center gap-5">
+          <Link to="/privacy" className="hover:text-foreground">개인정보처리방침</Link>
+          <Link to="/terms" className="hover:text-foreground">이용약관</Link>
+          <span>© 2026 KeyAtlas</span>
+        </div>
       </footer>
     </div>
   );
