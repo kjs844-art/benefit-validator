@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Wordmark } from "@/components/brand";
 import type { OAuthAuthorizationDetails } from "@supabase/supabase-js";
 
 export const Route = createFileRoute("/.lovable/oauth/consent")({
@@ -18,6 +19,16 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
     const next = location.pathname + location.searchStr;
     if (!data.session) throw redirect({ to: "/auth", search: { next } });
   },
+  head: () => ({
+    meta: [
+      { title: "AI 도구 연결 · 남은혜택" },
+      { name: "description", content: "남은혜택 AI 도구 연결을 승인합니다." },
+      { property: "og:title", content: "AI 도구 연결 · 남은혜택" },
+      { property: "og:description", content: "남은혜택 AI 도구 연결을 승인합니다." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   loader: async ({ location }) => {
     const authorizationId = new URLSearchParams(location.search).get(
       "authorization_id",
@@ -34,11 +45,13 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   component: Consent,
   errorComponent: ({ error }) => (
     <main className="flex min-h-screen items-center justify-center px-4">
-      <div className="surface-panel max-w-sm p-6 text-sm">
-        <p className="font-semibold">승인 요청을 표시할 수 없습니다</p>
+      <div className="w-full max-w-sm">
+        <Wordmark />
+        <div className="surface-panel mt-5 p-6 text-sm">
+        <h1 className="font-semibold">승인 요청을 표시할 수 없습니다</h1>
         <p className="mt-2 text-muted-foreground">
           {String((error as Error)?.message ?? error)}
-        </p>
+        </p></div>
       </div>
     </main>
   ),
@@ -73,15 +86,12 @@ function Consent() {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-10">
-      <div className="surface-panel w-full max-w-sm p-6">
+      <div className="w-full max-w-sm">
+        <Wordmark />
+        <div className="surface-panel mt-5 p-6">
         <h1 className="text-lg font-semibold">
           {clientName}를 남은혜택 계정에 연결
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          연결하면 {clientName}가 로그인된 상태에서 이 앱의 도구를 내 계정으로
-          사용할 수 있습니다. 내 계정의 데이터에만 접근하며, 이 앱의 권한 정책과
-          보안 규칙은 그대로 적용됩니다.
-        </p>
         <p className="mt-3 text-xs text-muted-foreground">
           로그인된 계정: {details.user?.email ?? "알 수 없음"}
         </p>
@@ -102,6 +112,7 @@ function Consent() {
           >
             연결 취소
           </Button>
+        </div>
         </div>
       </div>
     </main>

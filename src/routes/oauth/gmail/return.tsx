@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { LoaderCircle } from "lucide-react";
+import { Wordmark } from "@/components/brand";
 
 export const Route = createFileRoute("/oauth/gmail/return")({
   head: () => ({
@@ -26,5 +28,15 @@ function GmailReturnPage() {
     window.opener?.postMessage({ type, connectorId: "google_mail", code }, window.location.origin);
     window.close();
   }, []);
-  return <main className="grid min-h-screen place-items-center p-6"><p>{message}</p></main>;
+  return (
+    <main className="grid min-h-screen place-items-center p-6">
+      <div className="w-full max-w-sm">
+        <Wordmark />
+        <div className="surface-panel mt-5 flex items-center gap-3 p-6">
+          <LoaderCircle className="size-5 animate-spin text-primary" strokeWidth={1.5} aria-hidden="true" />
+          <p className="text-sm">{message}</p>
+        </div>
+      </div>
+    </main>
+  );
 }

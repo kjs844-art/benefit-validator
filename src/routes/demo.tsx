@@ -5,6 +5,7 @@ import { BenefitCard } from "@/components/BenefitCard";
 import { Button } from "@/components/ui/button";
 import { formatAmount, isObservationStale, nextResetAt, STATUS_LABELS, sumByUnit } from "@/lib/benefits";
 import { EXPORT_FORMAT_VERSION } from "@/lib/export-format";
+import { Wordmark } from "@/components/brand";
 
 export const Route = createFileRoute("/demo")({
   head: () => ({
@@ -55,9 +56,7 @@ function DemoPage() {
     <div className="min-h-screen">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-          <Link to="/" className="font-display text-lg font-bold">
-            남은혜택
-          </Link>
+          <Link to="/"><Wordmark /></Link>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={exportDemo}>
               데모 데이터 내보내기
@@ -79,9 +78,6 @@ function DemoPage() {
 
         <section>
            <h1 className="text-2xl font-bold">데모 대시보드</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            샘플 데이터로 실제 화면을 그대로 보여드립니다.
-          </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {Object.entries(totals).map(([unit, total]) => (
               <div key={unit} className="surface-panel surface-panel-hover p-4">
@@ -97,12 +93,7 @@ function DemoPage() {
         </section>
 
         <section className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold">메일에서 확인된 가입 서비스</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              디자인 스튜디오는 샘플 메일 분석 결과입니다.
-            </p>
-          </div>
+          <h2 className="text-lg font-semibold">메일에서 확인된 가입 서비스</h2>
           {data.services.map((service) => {
             const benefits = data.benefits.filter((b) => b.service_id === service.id);
             const nextResets = benefits
@@ -132,9 +123,6 @@ function DemoPage() {
           })}
         </section>
 
-        <p className="pb-10 text-xs text-muted-foreground">
-          데모 데이터는 예시이며 실제 서비스 계정과 연결되어 있지 않습니다.
-        </p>
       </main>
     </div>
   );
