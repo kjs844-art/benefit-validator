@@ -228,9 +228,13 @@ function Landing() {
           </div>
         </section>
       </main>
-      <footer className="mx-auto flex max-w-7xl items-center justify-between px-5 py-8 text-xs text-muted-foreground sm:px-8 lg:px-12">
+      <footer className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-8 text-xs text-muted-foreground sm:px-8 lg:px-12">
         <Wordmark className="scale-90 origin-left" />
-        <span>© 2026 KeyAtlas. 개인 혜택을 잊지 않도록.</span>
+        <div className="flex items-center gap-5">
+          <Link to="/privacy" className="hover:text-foreground">개인정보처리방침</Link>
+          <Link to="/terms" className="hover:text-foreground">이용약관</Link>
+          <span>© 2026 KeyAtlas</span>
+        </div>
       </footer>
     </div>
   );
