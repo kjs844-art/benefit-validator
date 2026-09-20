@@ -26,3 +26,5 @@
 - [ ] DB·서버 교체/수정 검토 — 현재 Lovable Cloud(Supabase). 외부 이전 시 export 형식(v2), RLS·암호화 키(APP_USER_CONNECTION_KEY_SECRET) 마이그레이션 포함 설계
 - [ ] 디자인 심화 — og:image 전용 이미지(1200x630), favicon 교체, shadcn button/input 다듬기, MCP 동의·Gmail 복귀 화면 위계 정리, BenefitForm 3분할
 - [ ] 사용자 피드백 기반 기능 고도화 (네이버·카카오 직접 연동 재검토 포함)
+
+- [x] 심사위원용: 첫 화면에서 "로그인 없이 데모 보기"를 주요 버튼으로 노출 (구글 연결 없이 결과 확인 가능)
