@@ -100,7 +100,7 @@ function AuthPage() {
     }
   }
 
-  async function socialSignIn(provider: "google" | "microsoft") {
+  async function socialSignIn(provider: "google") {
     setBusy(true);
     try {
       // Return to the preserved consent URL when in an OAuth consent flow;
