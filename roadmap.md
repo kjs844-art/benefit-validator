@@ -16,6 +16,7 @@
 - [x] GitHub 코드 동기화(Git sync) 연결 — kjs844-art/benefit-validator 저장소 생성, 실시간 양방향 동기화 확인(최신 커밋 f7c05de 반영)
 - [x] Google 연결 후 메일에서 발견한 혜택을 카테고리별로 바로 보여주는 주 흐름으로 개편
 - [x] 수동 서비스 등록·별도 AI 분석을 주 흐름과 메뉴에서 제거
-- [ ] 로그인된 실제 계정으로 Google 연결→발견 결과 전체 흐름 검증
-- [ ] Google OAuth를 일반 사용자 공개 상태로 전환하고 Gmail 연결 403 해소 — Google Cloud 검증·게시 설정 필요
-- [ ] Google 연결 실사용 검증 완료 후 공개 배포 및 제출 링크 확보
+- [ ] 로그인된 실제 계정으로 Google 연결→발견 결과 전체 흐름 검증 — Google 공개 전환 대기
+- [ ] Google OAuth를 일반 사용자 공개 상태로 전환하고 Gmail 연결 403 해소 — 공개 문서 준비 완료, Google Cloud 게시 설정 필요
+- [ ] Google 연결 실사용 검증 완료 후 공개 배포본 업데이트 — Google 공개 전환 대기
+- [x] Google OAuth 공개 전환용 개인정보처리방침·서비스 이용약관 페이지 추가
