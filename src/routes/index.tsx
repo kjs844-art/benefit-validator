@@ -149,24 +149,6 @@ function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="grid gap-4 sm:grid-cols-3">
-          {STEPS.map((s) => (
-            <div key={s.no} className="surface-panel surface-panel-hover p-5">
-              <p className="font-mono text-xs text-primary">{s.no}</p>
-              <h2 className="mt-2 text-base font-bold">{s.title}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-xs text-muted-foreground">
-          <p>읽기 전용 연결 · 메일 원문은 저장하지 않습니다</p>
-          <p>언제든 연결 해제와 데이터 삭제가 가능합니다</p>
-        </div>
-      </footer>
     </div>
   );
 }
