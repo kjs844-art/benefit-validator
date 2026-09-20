@@ -19,7 +19,7 @@ export type ResetRule =
   | "custom"
   | "unknown";
 
-export type SourceKind = "manual" | "ai_text" | "ai_image" | "import";
+export type SourceKind = "manual" | "ai_text" | "ai_image" | "email" | "import";
 export type ObservedPrecision = "minute" | "day";
 
 export type SubscriptionStatus =
@@ -74,6 +74,7 @@ export const SOURCE_KIND_LABELS: Record<SourceKind, string> = {
   manual: "직접 입력",
   ai_text: "AI 분석 (텍스트)",
   ai_image: "AI 분석 (이미지)",
+  email: "메일 분석",
   import: "가져오기",
 };
 

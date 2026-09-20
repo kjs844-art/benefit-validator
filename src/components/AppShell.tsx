@@ -7,6 +7,7 @@ const NAV = [
   { to: "/dashboard", label: "대시보드" },
   { to: "/services", label: "서비스·혜택" },
   { to: "/analyze", label: "AI 분석" },
+  { to: "/gmail", label: "Gmail" },
   { to: "/schedule", label: "일정" },
   { to: "/settings", label: "설정" },
 ] as const;

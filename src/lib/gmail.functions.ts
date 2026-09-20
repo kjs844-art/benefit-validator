@@ -112,7 +112,7 @@ export const startGmailConnect = createServerFn({ method: "POST" })
       appUserId: context.userId,
       clientAPIKey,
       returnUrl: new URL("/oauth/gmail/return", origin).toString(),
-      connectionAPIKey: storedKey ?? undefined,
+      ...(storedKey ? { connectionAPIKey: storedKey } : {}),
       credentialsConfiguration: { scopes: GMAIL_SCOPES },
     });
     return { authorizationUrl };
@@ -156,6 +156,18 @@ export const deleteGmailDiscoveries = createServerFn({ method: "POST" })
     const { error } = await context.supabase.from("email_discoveries").delete().eq("user_id", context.userId);
     if (error) throw new Error("메일 분석 결과를 삭제하지 못했습니다.");
     return { ok: true };
+  });
+
+export const getGmailDiscoveries = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("email_discoveries")
+      .select("id,service_name,benefit_kind,benefit_name,unit,granted_amount,remaining_amount,trial_days,remaining_days,expires_at,evidence_date,evidence_subject,confidence")
+      .eq("user_id", context.userId)
+      .order("evidence_date", { ascending: false });
+    if (error) throw new Error("메일 분석 결과를 불러오지 못했습니다.");
+    return data ?? [];
   });
 
 export const scanGmail = createServerFn({ method: "POST" })
