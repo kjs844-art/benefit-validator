@@ -241,3 +241,85 @@ new Intl.DateTimeFormat("ko-KR", { dateStyle: "medium", timeStyle: "short", hour
 - lint 에러 437건 (대부분 prettier 포맷, 기존 문제). 이 PR 머지 후
   `npx prettier --write "src/**/*.{ts,tsx,css}"` 한 번 돌려서 정리
 ```
+
+---
+
+## [8] 남은 작업 (이번 PR에서 하지 않은 것)
+
+디자인 작업을 여기서 멈춥니다. 아래는 **하려다 못 했거나, 범위를 넘어서 일부러 두고 온 것**입니다.
+위에서부터 효과 대비 품이 적은 순서입니다.
+
+### 8-1. og:image 가 없습니다 (우선순위 높음)
+
+`meta` 에 `twitter:card: summary_large_image` 는 있는데 **정작 `og:image` 가 없습니다.**
+지금 상태로 카카오톡이나 슬랙에 링크를 공유하면 미리보기 그림이 안 뜹니다.
+해커톤 제출 링크를 공유할 일이 많으니 이것부터 채우는 게 좋습니다.
+
+- 가장 빠른 방법: 이미 있는 `public/preview-demo.png` 을 그대로 지정
+- 더 나은 방법: 1200x630 전용 이미지를 따로 만들어 `public/og.png` 로 저장
+- 넣을 위치: `src/routes/__root.tsx` 와 `src/routes/index.tsx` 의 `head().meta`
+
+```ts
+{ property: "og:image", content: "https://<배포도메인>/og.png" },
+{ property: "og:image:width", content: "1200" },
+{ property: "og:image:height", content: "630" },
+{ name: "twitter:image", content: "https://<배포도메인>/og.png" },
+```
+
+`og:image` 는 상대 경로가 아니라 **절대 URL** 이어야 합니다.
+
+### 8-2. favicon 이 예전 것 그대로입니다
+
+`public/favicon.ico` 는 디자인 정리 이전 파일입니다.
+`src/components/brand.tsx` 의 `Mark`(테두리 사각형 안쪽 아래가 채워진 도형)를
+32x32 와 180x180 으로 내보내서 교체하면 브라우저 탭까지 일관됩니다.
+
+### 8-3. 디자인 패스를 하지 않은 화면 2개
+
+```
+src/routes/[.]lovable.oauth.consent.tsx   (MCP OAuth 동의 화면)
+src/routes/oauth/gmail/return.tsx         (Gmail 연결 후 돌아오는 화면)
+```
+
+두 화면 모두 `surface-panel` 같은 기존 클래스를 쓰고 있어서 **새 토큰이 자동으로 반영되며
+깨지지는 않습니다.** 다만 `PageHeader` / `EmptyState` 같은 공용 컴포넌트는 쓰지 않았고,
+여백과 위계를 따로 다듬지 않았습니다. 사용자가 자주 보는 화면은 아니라 뒤로 미뤘습니다.
+
+### 8-4. shadcn 기본 컴포넌트는 토큰만 바뀐 상태입니다
+
+`src/components/ui/*` 파일 자체는 손대지 않았습니다. 색과 반경은 토큰으로 자동 반영되지만,
+`button.tsx` 의 그림자나 `input.tsx` 의 높이 같은 건 기본값 그대로입니다.
+시간이 되면 `button`, `input`, `select` 세 개만 새 시스템에 맞게 다듬어도 체감이 큽니다.
+
+참고로 `badge.tsx` 는 `figures.tsx` 의 `Chip` 으로 대체되어 이제 거의 쓰이지 않습니다.
+
+### 8-5. BenefitForm 은 여백만 정리했습니다
+
+`src/components/BenefitForm.tsx` 는 입력 필드가 많은데 지금은 평평하게 나열되어 있습니다.
+"무엇을 얼마나 받았나 / 언제 확인했나 / 언제 리셋되나" 세 덩어리로 나누고
+사이에 `border-t border-hairline` 을 넣으면 훨씬 덜 부담스러워집니다.
+이번에는 기능 변경 위험 때문에 구조를 건드리지 않았습니다.
+
+### 8-6. 스킬 파일 경로
+
+저장소에 `.agents/skills/taste-skill/` 과 `.agents/skills/redesign-skill/` 이 들어 있습니다.
+그런데 Claude Code 가 자동으로 읽는 경로는 `.claude/skills/` 입니다.
+즉 지금 위치에서는 세션마다 자동 적용되지 않습니다.
+
+```bash
+mkdir -p .claude/skills && cp -r .agents/skills/* .claude/skills/
+```
+
+**옮기지 않고 복사만 제안하는 이유:** Lovable 쪽에서 `.agents/` 를 쓰고 있는지 확인하지 못했습니다.
+Lovable 이 `.agents/` 를 쓰지 않는 게 확실하면 복사 대신 이동해도 됩니다.
+
+### 8-7. 라이트 테마는 없습니다
+
+의도적으로 다크 한 가지만 만들었습니다. 두 벌을 유지하면 어긋나기 때문입니다.
+나중에 필요해지면 `src/styles.css` 의 `:root` 값을 라이트로 두고
+`@media (prefers-color-scheme: dark)` 에 지금 값을 넣는 구조로 바꾸면 됩니다.
+그 전까지는 `.dark` 클래스에 색을 다시 정의하지 마세요. 지금은 비어 있는 게 맞습니다.
+
+### 8-8. 저장소 전체 포맷 정리
+
+위 5-4 참고. 이 PR 머지 후 `npx prettier --write "src/**/*.{ts,tsx,css}"` 한 번.
