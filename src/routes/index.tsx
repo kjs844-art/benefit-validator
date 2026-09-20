@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Wordmark } from "@/components/brand";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -55,7 +56,7 @@ function Landing() {
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
-        <span className="font-display text-lg font-bold tracking-tight">남은혜택</span>
+        <Wordmark />
         <div className="flex gap-2 text-sm">
           <Link
             to="/demo"
@@ -75,29 +76,24 @@ function Landing() {
       <section className="hero-glow">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-12 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <p className="rise font-mono text-xs tracking-[0.18em] text-primary">
-              잊고 지낸 무료 혜택 찾기
-            </p>
-            <h1 className="rise-1 mt-4 text-4xl font-bold leading-[1.15] sm:text-6xl">
+            <h1 className="rise-1 text-4xl font-bold sm:text-6xl">
               가입하고 잊은
               <br />
               혜택, 메일이
               <br />
               기억합니다.
             </h1>
-            <p className="rise-2 mt-5 text-base text-muted-foreground">
-              무료 체험·크레딧·쿠폰, 있는 그대로.
-            </p>
+            <p className="rise-2 mt-5 text-base text-muted-foreground">무료 체험, 크레딧, 쿠폰.</p>
             <div className="rise-3 mt-8 flex flex-wrap gap-3">
               <Link
                 to="/demo"
-                className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
               >
                 로그인 없이 데모 보기
               </Link>
               <Link
                 to="/auth"
-                className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-accent"
+                className="rounded-md border border-border px-5 py-2.5 text-sm font-semibold hover:bg-accent"
               >
                 내 메일로 찾기
               </Link>
@@ -116,7 +112,7 @@ function Landing() {
                 >
                   <div className="flex items-baseline justify-between gap-2">
                     <p className="text-xs text-muted-foreground">{card.service}</p>
-                    <p className="font-mono text-[10px] text-muted-foreground">
+                    <p className="tnum text-[10px] text-muted-foreground">
                       {card.evidence}
                     </p>
                   </div>
