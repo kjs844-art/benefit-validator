@@ -77,19 +77,20 @@ function Landing() {
               </p>
               <div className="rise-3 mt-9 flex flex-wrap items-center gap-3">
                 <Link
-                  to="/auth"
-                  search={{ next: undefined }}
+                  to="/demo"
                   className="rounded-2xl bg-foreground px-5 py-3.5 text-sm font-bold text-background shadow-xl shadow-foreground/10 hover:-translate-y-1"
                 >
-                  Google로 KeyAtlas 시작하기 <ArrowUpRight className="ml-1 inline size-4" />
+                  로그인 없이 데모 보기 <ArrowUpRight className="ml-1 inline size-4" />
                 </Link>
                 <Link
-                  to="/demo"
+                  to="/auth"
+                  search={{ next: undefined }}
                   className="rounded-2xl border border-border bg-card/60 px-5 py-3.5 text-sm font-bold hover:-translate-y-1 hover:bg-card"
                 >
-                  데모 먼저 보기
+                  Google로 시작하기
                 </Link>
               </div>
+
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
                 <span>
                   <Check className="mr-1 inline size-3 text-primary" />
