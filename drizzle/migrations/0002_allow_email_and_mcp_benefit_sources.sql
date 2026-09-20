@@ -1,0 +1,2 @@
+ALTER TABLE public.benefits DROP CONSTRAINT benefits_source_kind_check;
+ALTER TABLE public.benefits ADD CONSTRAINT benefits_source_kind_check CHECK (source_kind IN ('manual','ai_text','ai_image','email','import','mcp'));
