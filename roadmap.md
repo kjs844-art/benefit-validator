@@ -7,10 +7,13 @@
 - [x] Google OAuth 설정값·Redirect URL·환경변수 문서화
 - [x] Microsoft 메일 연결은 제출판에서 제외
 - [x] 네이버·카카오 메일은 파일·캡처 가져오기로 지원하고 직접 연동은 보류
-- [ ] Claude 디자인 시스템 반영 후 텍스트 과다·PPT 느낌 없이 전체 화면 검증
+- [ ] 디자인 개선(텍스트 과다·PPT 느낌 정리 포함)은 제출 기능 완료 후로 보류
 - [x] Google 서비스 연결 (Calendar/Drive/Sheets/Docs 등) — 빌더 계정 데이터 접근용
 - [x] X(Twitter) 연결 — 사용자 요청으로 건너뜀
 - [x] "구글 계정만으로 가입 사이트·잔여 크레딧 조회" 가능 범위 정리 (Google이 타사 가입 목록/크레딧 잔량 API를 제공하지 않음 — Gmail 메일 분석 방식으로 구현)
 - [x] Gmail 연결 흐름 실검증: 가입→/gmail→연결 버튼→실제 Google 로그인 화면(accounts.google.com) 팝업 확인. Google 로그인 이후 동의~분석은 사용자 본인 계정 필요
 - [x] 전체 화면 디자인 개선: taste 스킬 적용 — Libre Baskerville+IBM Plex Sans KR 글꼴, 잉크+민트 유지, 숫자 tabular 정렬, 카드 호버/그림자, 그레인 질감, 첫 화면 히어로 재구성. tsgo 통과, 데스크톱·모바일 캡처 확인, 넘침 없음, 콘솔 오류 없음
 - [x] GitHub 코드 동기화(Git sync) 연결 — kjs844-art/benefit-validator 저장소 생성, 실시간 양방향 동기화 확인(최신 커밋 f7c05de 반영)
+- [ ] Google 연결 후 메일에서 발견한 혜택을 카테고리별로 바로 보여주는 주 흐름으로 개편
+- [ ] 수동 서비스 등록·별도 AI 분석을 보조 기능으로 낮추고 주 메뉴에서 제거
+- [ ] 로그인된 실제 계정으로 Google 연결→발견 결과 전체 흐름 검증
