@@ -269,6 +269,7 @@ function ServicesPage() {
       </div>
       {serviceForm ? (
         <ServiceForm
+          key={serviceForm.id ?? "new-service"}
           initial={serviceForm}
           busy={saveService.isPending}
           onCancel={() => setServiceForm(null)}
@@ -369,6 +370,7 @@ function ServicesPage() {
                   {benefitForm?.service_id === service.id ? (
                     <div className="mb-5">
                       <BenefitForm
+                        key={benefitForm.id ?? `new-${benefitForm.service_id}`}
                         initial={benefitForm}
                         submitting={saveBenefit.isPending}
                         onCancel={() => setBenefitForm(null)}
